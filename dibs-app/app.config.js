@@ -1,4 +1,6 @@
-{
+import 'dotenv/config';
+
+export default {
   "expo": {
     "name": "dibs-app",
     "slug": "dibs-app",
@@ -26,6 +28,11 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
+/*     "extra": {
+        firebaseApiKey: process.env.FIREBASE_API_KEY,
+        firebaseMessagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+        firebaseAppId: process.env.FIREBASE_APP_ID
+    }, */
     "plugins": [
       "expo-router"
     ],
