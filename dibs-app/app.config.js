@@ -20,6 +20,8 @@ export default {
       "supportsTablet": true
     },
     "android": {
+      "package": "com.dibs.app",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -33,6 +35,11 @@ export default {
         firebaseMessagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
         firebaseAppId: process.env.FIREBASE_APP_ID
     }, */
+    "extra": {
+      "eas": {
+        "projectId": "d7e5a080-bbfd-43e8-ab54-23e9b953346a"
+      }
+    },
     "plugins": [
       "expo-router"
     ],
