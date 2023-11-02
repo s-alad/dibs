@@ -7,6 +7,9 @@ import { getFirestore } from "firebase/firestore";
 import { GoogleAuthProvider } from "firebase/auth";
 import { signInWithRedirect } from "firebase/auth";
 
+import { initializeAuth  } from "firebase/auth";
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -21,10 +24,12 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const auth = getAuth(app);
-
-const gprovider = new GoogleAuthProvider();
 
 
+import * as firebaseAuth from 'firebase/auth';
+const reactNativePersistence = (firebaseAuth as any).getReactNativePersistence;
+const auth = initializeAuth(app, {
+    persistence: reactNativePersistence(ReactNativeAsyncStorage),
+});
 
-export { db, auth, app, gprovider };
+export { db, auth, app };

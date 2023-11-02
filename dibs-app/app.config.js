@@ -17,7 +17,8 @@ export default {
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.dibs.app",
     },
     "android": {
       "package": "com.dibs.app",

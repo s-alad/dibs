@@ -6,16 +6,23 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Appearance, Platform, TouchableOpacity, useColorScheme, Text, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Drawer } from 'expo-router/drawer';
-import Login from './login';
+import Login from './(auth)/login';
+import { AuthProvider } from '../context/authprovider';
+
 
 export default function RootLayout() {
 
 
   return (
-    <SafeAreaProvider>
-      <GestureHandlerRootView style={{ flex: 1, alignContent: 'center', justifyContent: 'center', alignItems: 'center' }}>  
-        <Login />
-      </GestureHandlerRootView>
-    </SafeAreaProvider>
+
+        <AuthProvider>
+          <Stack screenOptions={{ headerShown: true, }}>
+            <Stack.Screen
+              name="(protected)"
+              options={{}}
+            />
+          </Stack>
+        </AuthProvider>
+
   )
 }
