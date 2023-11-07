@@ -24,27 +24,6 @@ export default function ProtectedLayout() {
             }
         >
             <Tabs.Screen
-                name="home"
-                options={{
-                    href: "/home",
-                    title: "home",
-                    tabBarIcon: ({ color }) => (
-                        <View
-                            style={{
-                                flexDirection: "column",
-                                alignItems: "center",
-                                marginTop: 17,
-                                backgroundColor: "transparent",
-                            }}
-                        >
-                            <Text style={{ marginTop: 5, fontSize: 10, opacity: 0.5 }}>
-                                Home
-                            </Text>
-                        </View>
-                    ),
-                }}
-            />
-            <Tabs.Screen
                 name="account"
                 options={{
                     title: "account",
@@ -63,6 +42,28 @@ export default function ProtectedLayout() {
                         >
                             <Text style={{ marginTop: 5, fontSize: 10, opacity: 0.5 }}>
                                 Account
+                            </Text>
+                        </View>
+                    ),
+                }}
+            />
+            <Tabs.Screen
+                name="home"
+                options={{
+                    href: "/home",
+                    headerShown: true,
+                    title: "home",
+                    tabBarIcon: ({ color }) => (
+                        <View
+                            style={{
+                                flexDirection: "column",
+                                alignItems: "center",
+                                marginTop: 17,
+                                backgroundColor: "transparent",
+                            }}
+                        >
+                            <Text style={{ marginTop: 5, fontSize: 10, opacity: 0.5 }}>
+                                Home
                             </Text>
                         </View>
                     ),
