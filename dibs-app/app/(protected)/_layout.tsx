@@ -1,3 +1,4 @@
+import { FontAwesome } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import { Platform, View, Text } from "react-native";
 import { BottomTabBar } from "@react-navigation/bottom-tabs";
@@ -7,21 +8,24 @@ export default function ProtectedLayout() {
         <Tabs
             initialRouteName="home"
             screenOptions={{
-                tabBarStyle:
-                    Platform.OS === "ios"
-                    && {
-                        backgroundColor: "transparent",
-                    },
                 headerShown: false,
+                tabBarStyle: {
+                    backgroundColor: "#000",
+                    height: 60,
+                    borderRadius: 32,
+                    ...Platform.select({
+                        ios: {
+                            height: 80,
+                            paddingBottom: 10,
+                        },
+                    }),
+                },
+                tabBarIconStyle: {
+                    color: "#fff",
+                },
+                tabBarActiveTintColor: "#fff",
+                tabBarShowLabel: false,
             }}
-            tabBar={(props) =>
-                Platform.OS === "ios" ? (
-                        <BottomTabBar {...props} />
-
-                ) : (
-                    <BottomTabBar {...props} />
-                )
-            }
         >
             <Tabs.Screen
                 name="account"
@@ -36,13 +40,11 @@ export default function ProtectedLayout() {
                             style={{
                                 flexDirection: "column",
                                 alignItems: "center",
-                                marginTop: 17,
+                                marginTop: 12,
                                 backgroundColor: "transparent",
                             }}
                         >
-                            <Text style={{ marginTop: 5, fontSize: 10, opacity: 0.5 }}>
-                                Account
-                            </Text>
+                            <TabBarIcon name="user" color={color} size={22} />
                         </View>
                     ),
                 }}
@@ -58,13 +60,11 @@ export default function ProtectedLayout() {
                             style={{
                                 flexDirection: "column",
                                 alignItems: "center",
-                                marginTop: 17,
+                                marginTop: 12,
                                 backgroundColor: "transparent",
                             }}
                         >
-                            <Text style={{ marginTop: 5, fontSize: 10, opacity: 0.5 }}>
-                                Home
-                            </Text>
+                            <TabBarIcon name="home" color={color} size={22} />
                         </View>
                     ),
                 }}
@@ -72,7 +72,7 @@ export default function ProtectedLayout() {
             <Tabs.Screen
                 name="camera"
                 options={{
-                    title: "camera",
+                    headerTitle: "camera",
                     headerShown: true,
                     href: {
                         pathname: "/camera",
@@ -82,17 +82,28 @@ export default function ProtectedLayout() {
                             style={{
                                 flexDirection: "column",
                                 alignItems: "center",
-                                marginTop: 17,
+                                marginTop: 12,
                                 backgroundColor: "transparent",
                             }}
                         >
-                            <Text style={{ marginTop: 5, fontSize: 10, opacity: 0.5 }}>
-                                Camera
-                            </Text>
+                            <TabBarIcon name="camera" color={color} size={22} />
                         </View>
                     ),
                 }}
             />
         </Tabs>
     )
+}
+function TabBarIcon(props: {
+    name: React.ComponentProps<typeof FontAwesome>["name"];
+    color: string;
+    size?: number;
+}) {
+    return (
+        <FontAwesome
+            size={props.size || 26}
+            style={{ marginBottom: 0 }}
+            {...props}
+        />
+    );
 }

@@ -8,7 +8,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Drawer } from 'expo-router/drawer';
 import Login from './(auth)/login';
 import { AuthProvider } from '../context/authprovider';
-
+import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
 
 export default function RootLayout() {
 
