@@ -6,7 +6,12 @@ import { useFonts } from 'expo-font';
 
 export default function Login() {
 
-    const [fontsLoaded] = useFonts({'Outfit-Black': require('../../assets/fonts/Outfit-Black.ttf'),});
+    const [fontsLoaded] = useFonts({
+        'Outfit-Regular': require('../../assets/fonts/Outfit-Regular.ttf'),
+        'Outfit-Black': require('../../assets/fonts/Outfit-Black.ttf'),
+        'Outfit-Light': require('../../assets/fonts/Outfit-Light.ttf'),
+        "Outfit-Medium": require("../../assets/fonts/Outfit-Medium.ttf")
+    });
 
     const { setUser } = useAuth();
 
@@ -17,10 +22,25 @@ export default function Login() {
     }
 
     return (
-        <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: '#000' }}>
-            <TouchableOpacity onPress={login}>
-                <Text style={{color: 'white', fontFamily: "Outfit-Black"}}>Login</Text>
-            </TouchableOpacity>
+        <View style={{ display: "flex", flex: 1, alignItems: "center"}}>
+            <View style={{height: "25%"}}></View> 
+
+            <View style={{width: "80%"}}>
+                <TouchableOpacity onPress={login}>
+                    <Text style={{color: 'black', fontFamily: "Outfit-Medium", fontSize: 45}}>Log-in</Text>
+                </TouchableOpacity>
+
+                <Text
+                    style={{
+                        color: 'black',
+                        fontFamily: "Outfit-Light",
+                        paddingTop: 12,
+                        fontSize: 15,
+                    }}
+                >
+                    To continue, please use a valid Boston University email google account.
+                </Text>
+            </View>
         </View>
     );
 }
