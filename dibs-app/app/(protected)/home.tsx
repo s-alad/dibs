@@ -39,14 +39,13 @@ export default function Home() {
             <TouchableOpacity onPress={logout}>
                 <Text>Logout</Text>
             </TouchableOpacity>
-    
-                <ScrollView>
-                {listings.map((listing) => {
-                return(
+            <ScrollView>
+                    <Listing ></Listing>
                     <Listing></Listing>
-                )
-            })}
-                </ScrollView>
+                    <Listing></Listing>
+                    <Listing></Listing>
+            </ScrollView>
+                <Listing></Listing>
         </View>
     );
 }
