@@ -16,10 +16,9 @@ export default function RootLayout() {
   return (
 
         <AuthProvider>
-          <Stack screenOptions={{ headerShown: true, }}>
+          <Stack screenOptions={{ headerShown: false, }}>
             <Stack.Screen
               name="(protected)"
-              options={{}}
             />
           </Stack>
         </AuthProvider>
