@@ -2,6 +2,7 @@ import 'dotenv/config';
 
 export default {
   "expo": {
+    "owner": "dibsapp",
     "name": "dibs-app",
     "slug": "dibs-app",
     "version": "1.0.0",
