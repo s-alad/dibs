@@ -1,11 +1,22 @@
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
-
+import { useFonts } from 'expo-font';
+import { useRouter } from "expo-router";
 import { useAuth } from "../../context/authprovider";
+
 import Listing from "../../components/listing";
+
+
 export default function Home() {
+    const [fontsLoaded] = useFonts({
+        'Outfit-Regular': require('../../assets/fonts/Outfit-Regular.ttf'),
+        'Outfit-Black': require('../../assets/fonts/Outfit-Black.ttf'),
+        'Outfit-Light': require('../../assets/fonts/Outfit-Light.ttf'),
+        "Outfit-Medium": require("../../assets/fonts/Outfit-Medium.ttf"),
+        "Fascinate-Regular": require("../../assets/fonts/Fascinate-Regular.ttf"),
+    });
+
     const { setUser } = useAuth();
-    function logout() {
-        
+    function logout() {        
         setUser(null);
     }
 
@@ -19,8 +30,12 @@ export default function Home() {
 
 
     return (
-        <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-            <Text>Home</Text>
+        <View style={{ flex: 1, alignItems: "center", }}>
+
+            <View style={{padding: 12}}>
+                <Text style={{ fontSize: 18, fontFamily: "Fascinate-Regular",}}>Dibs!</Text>
+            </View>
+            
             <TouchableOpacity onPress={logout}>
                 <Text>Logout</Text>
             </TouchableOpacity>

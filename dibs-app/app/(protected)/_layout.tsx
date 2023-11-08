@@ -2,9 +2,15 @@ import { FontAwesome } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import { Platform, View, Text } from "react-native";
 import { BottomTabBar } from "@react-navigation/bottom-tabs";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ProtectedLayout() {
     return (
+        <SafeAreaView style={{
+            flex: 1,
+            height: "100%",
+            width: "100%",
+          }}>
         <Tabs
             initialRouteName="home"
             screenOptions={{
@@ -53,7 +59,7 @@ export default function ProtectedLayout() {
                 name="home"
                 options={{
                     href: "/home",
-                    headerShown: true,
+                    headerShown: false,
                     title: "home",
                     tabBarIcon: ({ color }) => (
                         <View
@@ -92,6 +98,7 @@ export default function ProtectedLayout() {
                 }}
             />
         </Tabs>
+        </SafeAreaView>
     )
 }
 function TabBarIcon(props: {

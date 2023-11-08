@@ -2,7 +2,7 @@ import { Stack, Tabs, router } from 'expo-router';
 import React, { useEffect } from 'react';
 import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from 'expo-status-bar';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Appearance, Platform, TouchableOpacity, useColorScheme, Text, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Drawer } from 'expo-router/drawer';
@@ -13,12 +13,13 @@ import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
 export default function RootLayout() {
 
   return (
-        <AuthProvider>
-          <Stack screenOptions={{ headerShown: false, }}>
-            <Stack.Screen
-              name="(protected)"
-            />
-          </Stack>
-        </AuthProvider>
+            <AuthProvider>
+            
+            <Stack screenOptions={{ headerShown: false, }}>
+              <Stack.Screen
+                name="(protected)"
+              />
+            </Stack>
+          </AuthProvider>
   )
 }
