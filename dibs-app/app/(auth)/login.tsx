@@ -10,7 +10,8 @@ export default function Login() {
         'Outfit-Regular': require('../../assets/fonts/Outfit-Regular.ttf'),
         'Outfit-Black': require('../../assets/fonts/Outfit-Black.ttf'),
         'Outfit-Light': require('../../assets/fonts/Outfit-Light.ttf'),
-        "Outfit-Medium": require("../../assets/fonts/Outfit-Medium.ttf")
+        "Outfit-Medium": require("../../assets/fonts/Outfit-Medium.ttf"),
+        "Fascinate-Regular": require("../../assets/fonts/Fascinate-Regular.ttf"),
     });
 
     const { setUser } = useAuth();
