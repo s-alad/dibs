@@ -4,7 +4,10 @@ import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useAuth } from "../../context/authprovider";
 import { useFonts } from 'expo-font';
 
+
 export default function Login() {
+
+    const provider = new GoogleAuthProvider();
 
     const [fontsLoaded] = useFonts({
         'Outfit-Regular': require('../../assets/fonts/Outfit-Regular.ttf'),

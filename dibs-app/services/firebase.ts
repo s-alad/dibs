@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 import Constants from 'expo-constants';
 
+import firebase from 'firebase/compat/app';
 import { initializeApp } from "firebase/app";
 import { getAuth, getRedirectResult } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";

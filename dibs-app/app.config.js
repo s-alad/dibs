@@ -20,8 +20,10 @@ export default {
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.dibs.app",
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "package": "com.dibs.app",
       "versionCode": 1,
       "adaptiveIcon": {
@@ -43,7 +45,8 @@ export default {
       }
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "@react-native-google-signin/google-signin"
     ],
     "scheme": "com.dibs.app"
   }
