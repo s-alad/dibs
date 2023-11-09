@@ -79,7 +79,7 @@ export default function ProtectedLayout() {
                 name="camera"
                 options={{
                     headerTitle: "camera",
-                    headerShown: true,
+                    headerShown: false,
                     href: {
                         pathname: "/camera",
                     },

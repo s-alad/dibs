@@ -1,6 +1,13 @@
 import React from "react";
 import { View, Text, StyleSheet} from "react-native";
 
+interface IListing {
+    name: string;
+    image: string;
+    id: string;
+    location: string;
+}
+
 export default function Listing() {
     return (
         <View style={
@@ -22,8 +29,7 @@ export default function Listing() {
                     borderRadius: 12,
                     height: "12%",
                     width: "90%",
-                    display: "flex",
-                    
+                    display: "flex",                   
                 }
             }>
                 <View style = {{

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert } from "react-native";
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert, Image } from "react-native";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useAuth } from "../../context/authprovider";
 import { useFonts } from 'expo-font';
@@ -44,6 +44,38 @@ export default function Login() {
                 >
                     To continue, please use a valid Boston University email google account.
                 </Text>
+                <TouchableOpacity onPress={login}>
+                    <View 
+                        style={{
+                            marginTop: 30,
+                            backgroundColor: 'black',
+                            width: "80%",
+                            height: 50,
+                            borderRadius: 32,
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            flexDirection: "row",
+                            gap: 20,
+                        }}
+                    >
+                        <Image
+                            source={require('../../assets/google.png')}
+                            style={{
+                                width: 26,
+                                height: 26,
+                            }}
+                        ></Image>
+                        <Text
+                            style={{
+                                color: 'white',
+                                fontFamily: "Outfit-Medium",
+                                fontSize: 15,
+                                textAlign: "center",
+                            }}
+                        >Login With Google</Text>
+                    </View>
+                </TouchableOpacity>
             </View>
         </View>
     );
