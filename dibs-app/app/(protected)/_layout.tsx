@@ -37,7 +37,7 @@ export default function ProtectedLayout() {
                 name="account"
                 options={{
                     title: "account",
-                    headerShown: true,
+                    headerShown: false,
                     href: {
                         pathname: "/account",
                     },

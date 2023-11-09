@@ -35,10 +35,6 @@ export default function Home() {
             <View style={{padding: 12}}>
                 <Text style={{ fontSize: 18, fontFamily: "Fascinate-Regular",}}>Dibs!</Text>
             </View>
-            
-            <TouchableOpacity onPress={logout}>
-                <Text>Logout</Text>
-            </TouchableOpacity>
 
             <ScrollView
                 style={{
