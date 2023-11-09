@@ -43,14 +43,17 @@ export default function Home() {
             <ScrollView
                 style={{
                     width: "100%",
-                    backgroundColor: "red",
                     
                 }}
                 centerContent={true}
             >
                 {
                     listings.map((p, i) => (
+                        <View style ={{
+                            alignItems: "center"
+                        }}>
                         <Listing/>
+                        </View>
                     ))
                 }
             </ScrollView>

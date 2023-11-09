@@ -8,7 +8,7 @@ export default function Listing() {
                 backgroundColor: "lightgrey",
                 borderRadius: 20,
                 width: "90%",
-                height: 200,
+                height: 300,
                 display: "flex",
                 justifyContent: "flex-end",
                 alignItems: "center",
