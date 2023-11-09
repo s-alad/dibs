@@ -30,7 +30,7 @@ export default function Home() {
 
 
     return (
-        <View style={{ flex: 1, alignItems: "center", }}>
+        <View style={{ display: "flex", flex: 1, alignItems: "center", }}>
 
             <View style={{padding: 12}}>
                 <Text style={{ fontSize: 18, fontFamily: "Fascinate-Regular",}}>Dibs!</Text>
@@ -39,13 +39,21 @@ export default function Home() {
             <TouchableOpacity onPress={logout}>
                 <Text>Logout</Text>
             </TouchableOpacity>
-            <ScrollView>
-                    <Listing ></Listing>
-                    <Listing></Listing>
-                    <Listing></Listing>
-                    <Listing></Listing>
+
+            <ScrollView
+                style={{
+                    width: "100%",
+                    backgroundColor: "red",
+                    
+                }}
+                centerContent={true}
+            >
+                {
+                    listings.map((p, i) => (
+                        <Listing/>
+                    ))
+                }
             </ScrollView>
-                <Listing></Listing>
         </View>
     );
 }

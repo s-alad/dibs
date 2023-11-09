@@ -7,14 +7,13 @@ export default function Listing() {
             {
                 backgroundColor: "lightgrey",
                 borderRadius: 20,
-                margin: "10%",
-                marginBottom: 0.5,
                 width: "90%",
-                height: "55%",
+                height: 200,
                 display: "flex",
                 justifyContent: "flex-end",
                 alignItems: "center",
-                paddingBottom: 18
+                paddingBottom: 18,
+                margin:10
             }
         }>
             <View style = {
