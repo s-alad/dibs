@@ -47,7 +47,9 @@ export default function Home() {
                     listings.map((p, i) => (
                         <View style ={{
                             alignItems: "center"
-                        }}>
+                        }}
+                            key={i}
+                        >
                         <Listing/>
                         </View>
                     ))
