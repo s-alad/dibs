@@ -30,7 +30,7 @@ export default function Home() {
 
 
     return (
-        <View style={{ display: "flex", flex: 1, alignItems: "center", }}>
+        <View style={{ display: "flex", flex: 1, alignItems: "center"}}>
 
             <View style={{padding: 12}}>
                 <Text style={{ fontSize: 18, fontFamily: "Fascinate-Regular",}}>Dibs!</Text>
