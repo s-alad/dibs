@@ -16,7 +16,7 @@ export default function Home() {
     });
 
     const { setUser } = useAuth();
-    function logout() {        
+    function logout() {
         setUser(null);
     }
 
@@ -32,25 +32,22 @@ export default function Home() {
     return (
         <View style={{ display: "flex", flex: 1, alignItems: "center"}}>
 
-            <View style={{padding: 12}}>
-                <Text style={{ fontSize: 18, fontFamily: "Fascinate-Regular",}}>Dibs!</Text>
+            <View style={{ padding: 12 }}>
+                <Text style={{ fontSize: 18, fontFamily: "Fascinate-Regular", }}>Dibs!</Text>
             </View>
 
             <ScrollView
-                style={{
-                    width: "100%",
-                    
-                }}
+                style={{width: "100%"}}
                 centerContent={true}
             >
                 {
                     listings.map((p, i) => (
-                        <View style ={{
+                        <View style={{
                             alignItems: "center"
                         }}
                             key={i}
                         >
-                        <Listing/>
+                            <Listing />
                         </View>
                     ))
                 }

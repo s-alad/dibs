@@ -16,7 +16,7 @@ export default function Account() {
     return (
         <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "white", paddingTop: 20} }>
             <TouchableOpacity onPress={logout} style ={{alignSelf:"flex-start", left: 30, top: 20, position: 'absolute', zIndex: 9}}>
-                 <Image source={require('dibs-app/assets/exit.png')}  />
+                <Image source={require('dibs-app/assets/exit.png')}  />
             </TouchableOpacity>
 
             <Image source={require('dibs-app/assets/Ellipse.png')} style = {{width:120, height:120, borderRadius: 200/2}}/>
