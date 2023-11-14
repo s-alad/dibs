@@ -8,7 +8,7 @@ interface IListing {
     location: string;
 }
 
-export default function Listing() {
+export default function Listing({ onPress }) {
     const [showCard, setshowCard] = useState(false);
     const [redHeart, setRedHeart] = useState(false)
     const toggleText = () => {
@@ -19,8 +19,8 @@ export default function Listing() {
         setRedHeart(!redHeart)
     }
 
+  
     return (
-
         <TouchableOpacity style={styles.square} onPress={toggleText}
         
             activeOpacity={1}
@@ -46,12 +46,16 @@ export default function Listing() {
                         {!redHeart && <Image source={require('dibs-app/assets/whiteHeart.png')}  />}
                     </TouchableOpacity>
                     <Image source={require('dibs-app/assets/map.png')}  />
+                    <TouchableOpacity onPress={onPress}>
                     <Image source={require('dibs-app/assets/flag.png')}  />
+                    </TouchableOpacity>
                 </View>
+                
             </View>
             </TouchableWithoutFeedback>}
-           
+            
         </TouchableOpacity>
+        
 
     )
 
@@ -106,4 +110,5 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginTop: 20
     }
+    
 });

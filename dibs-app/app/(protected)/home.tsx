@@ -1,8 +1,12 @@
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView,  StyleSheet } from "react-native";
+import React, {useCallback, useMemo, useRef } from "react";
 import { useFonts } from 'expo-font';
 import { useRouter } from "expo-router";
 import { useAuth } from "../../context/authprovider";
-
+import {
+    BottomSheetModal,
+    BottomSheetModalProvider,
+} from '@gorhom/bottom-sheet';
 import Listing from "../../components/listing";
 
 
@@ -28,30 +32,60 @@ export default function Home() {
         "listing4"
     ]
 
+    const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+    // variables
+    const snapPoints = useMemo(() => ['25%', '50%'], []);
+
+    // callbacks
+    const handlePresentModalPress = useCallback(() => {
+        bottomSheetModalRef.current?.present();
+    }, []);
+    const handleSheetChanges = useCallback((index: number) => {
+        console.log('handleSheetChanges', index);
+    }, []);
 
     return (
-        <View style={{ display: "flex", flex: 1, alignItems: "center"}}>
+        <BottomSheetModalProvider>
+            <View style={{ display: "flex", flex: 1, alignItems: "center" }}>
 
-            <View style={{ padding: 12 }}>
-                <Text style={{ fontSize: 18, fontFamily: "Fascinate-Regular", }}>Dibs!</Text>
+                <View style={{ padding: 12 }}>
+                    <Text style={{ fontSize: 18, fontFamily: "Fascinate-Regular", }}>Dibs!</Text>
+                </View>
+
+                <ScrollView
+                    style={{ width: "100%" }}
+                    centerContent={true}
+                >
+                    {
+                        listings.map((p, i) => (
+                            <View style={{
+                                alignItems: "center"
+                            }}
+                                key={i}
+                            >
+                                <Listing onPress={handlePresentModalPress} />
+                            </View>
+                        ))
+                    }
+                </ScrollView>
+                <BottomSheetModal
+                    ref={bottomSheetModalRef}
+                    index={1}
+                    snapPoints={snapPoints}
+                    onChange={handleSheetChanges}
+                >
+                    <View style={{
+                        flex: 1,
+                        alignItems: 'center',
+                    }}>
+                        <Text>Awesome 🎉</Text>
+                    </View>
+                </BottomSheetModal>
             </View>
-
-            <ScrollView
-                style={{width: "100%"}}
-                centerContent={true}
-            >
-                {
-                    listings.map((p, i) => (
-                        <View style={{
-                            alignItems: "center"
-                        }}
-                            key={i}
-                        >
-                            <Listing />
-                        </View>
-                    ))
-                }
-            </ScrollView>
-        </View>
+        </BottomSheetModalProvider>
     );
 }
+const styles = StyleSheet.create({
+    
+})
