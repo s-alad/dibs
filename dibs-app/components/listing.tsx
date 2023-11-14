@@ -17,7 +17,10 @@ export default function Listing() {
 
     return (
 
-        <TouchableOpacity style={styles.square} onPress={toggleText}>
+        <TouchableOpacity style={styles.square} onPress={toggleText}
+        
+            activeOpacity={1}
+        >
             
             {!showCard && <View style={styles.textContainer}>
                 <View style={{
