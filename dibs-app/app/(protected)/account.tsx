@@ -23,7 +23,7 @@ export default function Account() {
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
     // variables
-    const snapPoints = useMemo(() => ['25%', '65%'], []);
+    const snapPoints = useMemo(() => ['25%', '75%'], []);
 
     // callbacks
     const handlePresentModalPress = useCallback(() => {
