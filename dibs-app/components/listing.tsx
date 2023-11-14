@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Button, TouchableOpacity, BackHandler, Image } from "react-native";
+import { View, Text, StyleSheet, Button, TouchableOpacity, BackHandler, Image, TouchableWithoutFeedback } from "react-native";
 
 interface IListing {
     name: string;
@@ -10,10 +10,14 @@ interface IListing {
 
 export default function Listing() {
     const [showCard, setshowCard] = useState(false);
-
+    const [redHeart, setRedHeart] = useState(false)
     const toggleText = () => {
         setshowCard(!showCard);
     };
+
+    const heart = () => {
+        setRedHeart(!redHeart)
+    }
 
     return (
 
@@ -34,13 +38,19 @@ export default function Listing() {
                 </View>
             </View>}
             {showCard && 
+            <TouchableWithoutFeedback>
             <View style = {styles.card}><Text style = {styles.cardText}>Address</Text>
                 <View style = {styles.icons}>
-                    <Image source={require('dibs-app/assets/whiteHeart.png')}  />
+                    <TouchableOpacity onPress={heart}>
+                        {redHeart && <Image source={require('dibs-app/assets/like.png')}  />}
+                        {!redHeart && <Image source={require('dibs-app/assets/whiteHeart.png')}  />}
+                    </TouchableOpacity>
                     <Image source={require('dibs-app/assets/map.png')}  />
                     <Image source={require('dibs-app/assets/flag.png')}  />
                 </View>
-            </View>}
+            </View>
+            </TouchableWithoutFeedback>}
+           
         </TouchableOpacity>
 
     )
@@ -58,6 +68,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         paddingBottom: 18,
         margin: 10,
+        
     },
 
     card: {
@@ -68,7 +79,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
        display: "flex",
-       position: "absolute"
+       position: "absolute",
+       
     },
     textContainer:
     {
