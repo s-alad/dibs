@@ -8,7 +8,8 @@ import {
     BottomSheetModalProvider,
 } from '@gorhom/bottom-sheet';
 import Listing from "../../components/listing";
-
+import Divider from "../../components/divider";
+import Report from "../../components/report";
 
 export default function Home() {
     const [fontsLoaded] = useFonts({
@@ -35,7 +36,7 @@ export default function Home() {
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
     // variables
-    const snapPoints = useMemo(() => ['25%', '50%'], []);
+    const snapPoints = useMemo(() => ['25%', '75%'], []);
 
     // callbacks
     const handlePresentModalPress = useCallback(() => {
@@ -74,18 +75,16 @@ export default function Home() {
                     index={1}
                     snapPoints={snapPoints}
                     onChange={handleSheetChanges}
+                    backgroundStyle={{
+                        backgroundColor: 'black'
+                        }}
+                    handleIndicatorStyle ={{
+                        backgroundColor:"grey"
+                    }}
                 >
-                    <View style={{
-                        flex: 1,
-                        alignItems: 'center',
-                    }}>
-                        <Text>Awesome 🎉</Text>
-                    </View>
+                    <Report/>
                 </BottomSheetModal>
             </View>
         </BottomSheetModalProvider>
     );
 }
-const styles = StyleSheet.create({
-    
-})

@@ -8,7 +8,11 @@ interface IListing {
     location: string;
 }
 
-export default function Listing({ onPress }) {
+interface ListingProps {
+    onPress: () => void;
+  }
+
+const Listing: React.FC<ListingProps> = ({ onPress }) => {
     const [showCard, setshowCard] = useState(false);
     const [redHeart, setRedHeart] = useState(false)
     const toggleText = () => {
@@ -46,7 +50,7 @@ export default function Listing({ onPress }) {
                         {!redHeart && <Image source={require('dibs-app/assets/whiteHeart.png')}  />}
                     </TouchableOpacity>
                     <Image source={require('dibs-app/assets/map.png')}  />
-                    <TouchableOpacity onPress={onPress}>
+                    <TouchableOpacity onPress={() => onPress()}>
                     <Image source={require('dibs-app/assets/flag.png')}  />
                     </TouchableOpacity>
                 </View>
@@ -58,9 +62,8 @@ export default function Listing({ onPress }) {
         
 
     )
-
-
 }
+export default Listing;
 const styles = StyleSheet.create({
     square: {
         backgroundColor: "lightgrey",
