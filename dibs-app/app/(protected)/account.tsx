@@ -29,16 +29,13 @@ export default function Account() {
             >
                 {
                     liked.map((p, i) => (
-                        <View style ={{
-                            alignItems: "center"
-                        }}>
-                        <Image source={require('dibs-app/assets/like.png')} style={{ alignSelf: "flex-end", marginRight: "6%"}}/>
-                        <Listing/>
+                        <View style ={{alignItems: "center"}} key={i}>
+                            <Image source={require('dibs-app/assets/like.png')} style={{ alignSelf: "flex-end", marginRight: "6%"}}/>
+                            <Listing/>
                         </View>
                     ))
                 }
             </ScrollView>
-           
         </View>
     );
 }
