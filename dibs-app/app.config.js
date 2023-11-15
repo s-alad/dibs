@@ -20,10 +20,8 @@ export default {
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.dibs.app",
-      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
-      "googleServicesFile": "./google-services.json",
       "package": "com.dibs.app",
       "versionCode": 1,
       "adaptiveIcon": {

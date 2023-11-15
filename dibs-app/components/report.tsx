@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Pressable, Image, TextInput} from "react-native";
 import Divider from './divider';
+
 const Report = () => {
     const [clicked, setClicked] = useState(false);
     const [reported, setReported] = useState(false);
