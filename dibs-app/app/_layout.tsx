@@ -13,13 +13,12 @@ import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
 export default function RootLayout() {
 
   return (
-            <AuthProvider>
-            
-            <Stack screenOptions={{ headerShown: false, }}>
-              <Stack.Screen
-                name="(protected)"
-              />
-            </Stack>
-          </AuthProvider>
+    <AuthProvider>
+      <Stack screenOptions={{ headerShown: false, }}>
+        <Stack.Screen
+          name="(protected)"
+        />
+      </Stack>
+    </AuthProvider>
   )
 }

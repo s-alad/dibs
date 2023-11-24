@@ -2,13 +2,9 @@ import { View, Text, TouchableOpacity, ScrollView,  StyleSheet } from "react-nat
 import React, {useCallback, useMemo, useRef } from "react";
 import { useFonts } from 'expo-font';
 import { useRouter } from "expo-router";
-import { useAuth } from "../../context/authprovider";
-import {
-    BottomSheetModal,
-    BottomSheetModalProvider,
-} from '@gorhom/bottom-sheet';
+import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+
 import Listing from "../../components/listing";
-import Divider from "../../components/divider";
 import Report from "../../components/report";
 
 export default function Home() {
@@ -19,12 +15,6 @@ export default function Home() {
         "Outfit-Medium": require("../../assets/fonts/Outfit-Medium.ttf"),
         "Fascinate-Regular": require("../../assets/fonts/Fascinate-Regular.ttf"),
     });
-
-    const { setUser } = useAuth();
-    function logout() {
-        setUser(null);
-    }
-
 
     let listings = [
         "listigng1",

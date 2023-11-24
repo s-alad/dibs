@@ -46,6 +46,6 @@ export default {
       "expo-router",
       "@react-native-google-signin/google-signin"
     ],
-    "scheme": "com.dibs.app"
+    "scheme": "dibs-app"
   }
 }

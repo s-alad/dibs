@@ -1,51 +1,184 @@
-import { useSegments, useRouter } from "expo-router";
-import { createContext, useContext, useEffect, useState } from "react";
+import { useSegments, useRouter, usePathname } from "expo-router";
+import { createContext, useContext, useEffect, useState, useRef } from "react";
 
-type User = {
-    name: string;
+import { auth, db, app} from "../services/firebase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { GoogleAuthProvider, onAuthStateChanged, signInWithCredential, signOut} from "firebase/auth";
+import { collection, addDoc, getDoc, query, where, doc, setDoc } from 'firebase/firestore';
+
+import * as Google from "expo-auth-session/providers/google";
+import * as WebBrowser from "expo-web-browser";
+import * as SecureStore from 'expo-secure-store';
+import getRandomName from "../util/anonymous";
+
+export type TUser = {
+    uid: string;
+    displayName: string;
+    email: string;
+    raw: string;
 }
 
-type AuthType = {
-    user: User | null;
-    setUser: (user: User | null) => void;
+export type AuthType = {
+    user: TUser | null;
+    authenticationStatus?: TAuthenticationStatus;
+    userLogin: () => void;
+    userLogout: () => void;
 }
+
+type TAuthenticationStatus = "initial" | "started" | "authenticated" | "failed" | "error";
 
 const AuthContext = createContext<AuthType>({
     user: null,
-    setUser: () => { },
+    authenticationStatus: "initial",
+    userLogin: () => { },
+    userLogout: () => { },
 });
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuthContext = () => useContext(AuthContext);
 
-function useProtectedRoute(user: any) {
+function useProtectedRoute(user: TUser | null, startedAuthentication: TAuthenticationStatus) {
     const segments = useSegments();
     const router = useRouter();
+    const pathname = usePathname();
 
     useEffect(() => {
         const inAuthGroup = segments[0] === "(auth)";
-
-        if (
-            // If the user is not signed in and the initial segment is not anything in the auth group.
-            !user &&
-            !inAuthGroup
-        ) {
-            // Redirect to the sign-in page.
-            router.replace("/welcome");
-        } else if (user && inAuthGroup) {
-            // Redirect away from the sign-in page.
-            router.replace("/home");
+        const currentRoute = pathname
+        // If the user is not signed in and the initial segment is not anything in the auth group.
+        if (startedAuthentication === "started") {
+            if (pathname !== "/login") { router.replace("/login"); }
         }
-    }, [user, segments]);
+        else if (!user && !inAuthGroup ) {
+            if (pathname !== "/welcome") { router.replace("/welcome"); } // Redirect to the welcome page.
+        } else if (user && inAuthGroup) {
+            router.replace("/home"); // Redirect away from the sign-in page.
+        }
+    }, [user, segments, startedAuthentication]);
 }
 
-export function AuthProvider({ children }: { children: JSX.Element }): JSX.Element {
-    const [user, setUser] = useState<User | null>(null);
+/* WebBrowser.maybeCompleteAuthSession(); */
 
-    useProtectedRoute(user);
+export function AuthProvider({ children }: { children: JSX.Element }): JSX.Element {
+    const [user, setUser] = useState<TUser | null>(null);
+    const [authenticationStatus, setAuthenticationStatus] = useState<TAuthenticationStatus>("initial");
+
+    const [request, response, promptAsync] = Google.useAuthRequest({
+        iosClientId: process.env.EXPO_PUBLIC_IOS_CLIENT_ID,
+        androidClientId: process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID,
+        webClientId: process.env.EXPO_PUBLIC_WEB_CLIENT_ID,
+    })
+
+    async function userExistsInFirestore(user: TUser) {
+        const userDocRef = doc(collection(db, 'users'), user.uid);
+        const userDoc = await getDoc(userDocRef);
+        return userDoc.exists();
+    }
+
+    async function addUserToFirestore(user: TUser) {
+        const userExistsAlready = await userExistsInFirestore(user);
+
+        if (!userExistsAlready) {
+            const userCollection = collection(db, 'users');
+            const userDocRef = doc(userCollection, user.uid);
+            await setDoc(userDocRef, {
+                email: user.email,
+                displayName: user.displayName,
+                anonymousName: "Anonymous" + getRandomName(),
+                uid: user.uid,
+                raw: user.raw,
+                likedDibs: [],
+                myDibs: [],
+            });
+        }
+    }
+    
+    // check if user exists in async storage, if so, set user
+    useEffect(() => {
+        if (user) { return }
+        console.log("[AS] - CHECK IF USER EXISTS")
+        AsyncStorage.getItem("@user").then((res) => {
+            console.log(res)
+            if (res) {
+                setUser(JSON.parse(res));
+            }
+        }).catch((err) => { console.log(err) })
+    }, [])
+
+    useEffect(() => {
+        console.log("[UE] - RESPONSE RENDER")
+        console.log(authenticationStatus)
+
+        if (user) { return }
+        if (response?.type === "success" && authenticationStatus === "started") {
+            const { id_token } = response.params;
+            console.log("INSIDE RESPONSE")
+            console.log("response", response.params)
+            const credential = GoogleAuthProvider.credential(id_token);
+            console.log("-----")
+            signInWithCredential(auth, credential).then((res) => {
+                console.log(res)
+                let resuser = res.user;
+
+                if (resuser && resuser.email) {
+
+                    if (resuser.email.split("@")[1] !== "bu.edu") {
+                        console.log("NOT A BU EMAIL")
+                        setAuthenticationStatus("failed");
+                        return;
+                    }
+
+                    let nuser: TUser = {
+                        uid: resuser.uid,
+                        displayName: resuser.displayName || "",
+                        email: resuser.email,
+                        raw: JSON.stringify(resuser),
+                    }
+
+                    AsyncStorage.setItem("@user", JSON.stringify(nuser)).then(async () => {
+                        console.log("SET USER")
+                        setUser(nuser);
+                        setAuthenticationStatus("authenticated");
+                        await addUserToFirestore(nuser);
+                    }).catch((err) => {
+                        console.log(err)
+                    })
+                }
+            })
+        }
+        if (response?.type === "cancel") {
+            console.log("CANCELLED")
+            setAuthenticationStatus("initial");
+        }
+    }, [response]);
+
+    async function userLogin() {
+        console.log("[UL] - LOGIN")
+        setAuthenticationStatus("started");
+
+        promptAsync().then((res) => {
+            console.log(res)
+            if (res.type === "dismiss") {
+                setAuthenticationStatus("initial");
+            }
+        }).catch((err) => { console.log(err) })
+    }
+
+    async function userLogout() {
+        console.log("[UL] - LOGOUT")
+        await signOut(auth);
+        await AsyncStorage.removeItem("@user").then(() => {
+            setUser(null);
+            setAuthenticationStatus("initial");
+        }).catch((err) => { console.log(err) })
+    }
+
+    useProtectedRoute(user, authenticationStatus);
 
     const authContext: AuthType = {
         user,
-        setUser,
+        userLogin,
+        userLogout,
+        authenticationStatus,
     };
 
     return <AuthContext.Provider value={authContext}>{children}</AuthContext.Provider>;

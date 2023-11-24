@@ -1,13 +1,21 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert, Image } from "react-native";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { useAuth } from "../../context/authprovider";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator } from "react-native";
+import { useAuthContext } from "../../context/authprovider";
 import { useFonts } from 'expo-font';
 
+import * as Google from "expo-auth-session/providers/google";
+import * as WebBrowser from "expo-web-browser";
+
+import { GoogleAuthProvider, onAuthStateChanged, signInWithCredential } from "firebase/auth";
+import { auth } from "../../services/firebase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import { TUser } from "../../context/authprovider";
+
+
+WebBrowser.maybeCompleteAuthSession();
 
 export default function Login() {
-
-    const provider = new GoogleAuthProvider();
 
     const [fontsLoaded] = useFonts({
         'Outfit-Regular': require('../../assets/fonts/Outfit-Regular.ttf'),
@@ -17,20 +25,16 @@ export default function Login() {
         "Fascinate-Regular": require("../../assets/fonts/Fascinate-Regular.ttf"),
     });
 
-    const { setUser } = useAuth();
+    const { user, userLogin, authenticationStatus} = useAuthContext();
 
-    const login = () => {
-        setUser({
-            name: "John Doe",
-        });
-    }
 
     return (
+
         <View style={{ display: "flex", flex: 1, alignItems: "center"}}>
             <View style={{height: "25%"}}></View> 
 
             <View style={{width: "80%"}}>
-                <TouchableOpacity onPress={login}>
+                <TouchableOpacity>
                     <Text style={{color: 'black', fontFamily: "Outfit-Medium", fontSize: 45}}>Log-in</Text>
                 </TouchableOpacity>
 
@@ -44,7 +48,11 @@ export default function Login() {
                 >
                     To continue, please use a valid Boston University email google account.
                 </Text>
-                <TouchableOpacity onPress={login}>
+                <TouchableOpacity onPress={
+                    () => {
+                        userLogin()
+                    }
+                }>
                     <View 
                         style={{
                             marginTop: 30,
@@ -76,6 +84,22 @@ export default function Login() {
                         >Login With Google</Text>
                     </View>
                 </TouchableOpacity>
+                <Text
+                    style={{
+                        color: 'black',
+                        fontFamily: "Outfit-Light",
+                        marginTop: 30,
+                        fontSize: 15,
+                    }}
+                >
+                    {
+                        authenticationStatus === "failed" ? "please ensure you are using a bu.edu email" : (
+                            authenticationStatus === "started" ? <ActivityIndicator size="small" color="#000" /> : (
+                                authenticationStatus === "authenticated" ? <ActivityIndicator size="small" color="#0000ff" /> : ""
+                            )
+                        )
+                    }
+                </Text>
             </View>
         </View>
     );
