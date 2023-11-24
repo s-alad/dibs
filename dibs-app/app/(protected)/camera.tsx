@@ -19,7 +19,6 @@ export default function Snap({ navigation } : { navigation: any} ) {
       return () => {
         console.log("[CAM] Unfocused");
         setShowCamera(false);
-        cameraRef.current?.pausePreview();
       }
     }, [])
   );
