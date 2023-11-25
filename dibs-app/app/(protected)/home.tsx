@@ -1,11 +1,15 @@
 import { View, Text, TouchableOpacity, ScrollView,  StyleSheet } from "react-native";
-import React, {useCallback, useMemo, useRef } from "react";
+import React, {useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useFonts } from 'expo-font';
 import { useRouter } from "expo-router";
 import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 
+import { getFirestore, collection, getDocs, DocumentData } from 'firebase/firestore';
+import { app } from "../../services/firebase";
+
 import Listing from "../../components/listing";
 import Report from "../../components/report";
+import Dib from "../../models/dib";
 
 export default function Home() {
     const [fontsLoaded] = useFonts({
@@ -23,17 +27,30 @@ export default function Home() {
         "listing4"
     ]
 
+    let [dibs, setDibs] = useState<Dib[]>([]);
+
+    const db = getFirestore(app);
+    useEffect(() => {
+        console.log("====================================");
+        (async () => {
+            const dibsCollection = collection(db, 'dibs');
+            const dibsSnapshot = await getDocs(dibsCollection);
+
+            let ndibs: Dib[] = [];
+            dibsSnapshot.forEach((doc) => {
+                const data: DocumentData = doc.data();
+                ndibs.push(new Dib(data));
+            });
+            setDibs(ndibs);
+            
+        })();
+    }, []);
+
+
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-
-    // variables
     const snapPoints = useMemo(() => ['25%', '75%'], []);
-
-    // callbacks
     const handlePresentModalPress = useCallback(() => {
         bottomSheetModalRef.current?.present();
-    }, []);
-    const handleSheetChanges = useCallback((index: number) => {
-        console.log('handleSheetChanges', index);
     }, []);
 
     return (
@@ -46,16 +63,13 @@ export default function Home() {
 
                 <ScrollView
                     style={{ width: "100%" }}
+                    contentContainerStyle={{ paddingBottom: 60 }}
                     centerContent={true}
                 >
                     {
-                        listings.map((p, i) => (
-                            <View style={{
-                                alignItems: "center"
-                            }}
-                                key={i}
-                            >
-                                <Listing onPress={handlePresentModalPress} />
+                        dibs.map((d, i) => (
+                            <View style={{ alignItems: "center"}} key={i}>
+                                <Listing onPress={handlePresentModalPress} dib={d} />
                             </View>
                         ))
                     }
@@ -65,7 +79,6 @@ export default function Home() {
                     ref={bottomSheetModalRef}
                     index={1}
                     snapPoints={snapPoints}
-                    onChange={handleSheetChanges}
                     backgroundStyle={{
                         backgroundColor: 'black'
                         }}

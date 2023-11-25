@@ -52,8 +52,8 @@ export default function Account() {
                     {
                         liked.map((p, i) => (
                             <View style={{ alignItems: "center" }} key={i}>
-                                <Image source={require('dibs-app/assets/like.png')} style={{ alignSelf: "flex-end", marginRight: "6%" }} />
-                                <Listing onPress={handlePresentModalPress} />
+                                {/* <Image source={require('dibs-app/assets/like.png')} style={{ alignSelf: "flex-end", marginRight: "6%" }} /> */}
+                                {/* <Listing onPress={handlePresentModalPress} /> */}
                             </View>
                         ))
                     }

@@ -14,6 +14,7 @@ import getRandomName from "../util/anonymous";
 export type TUser = {
     uid: string;
     displayName: string;
+    anonymousName: string;
     email: string;
     raw: string;
 }
@@ -83,7 +84,7 @@ export function AuthProvider({ children }: { children: JSX.Element }): JSX.Eleme
             await setDoc(userDocRef, {
                 email: user.email,
                 displayName: user.displayName,
-                anonymousName: "Anonymous" + getRandomName(),
+                anonymousName: user.anonymousName,
                 uid: user.uid,
                 raw: user.raw,
                 likedDibs: [],
@@ -130,6 +131,7 @@ export function AuthProvider({ children }: { children: JSX.Element }): JSX.Eleme
                     let nuser: TUser = {
                         uid: resuser.uid,
                         displayName: resuser.displayName || "",
+                        anonymousName: "Anonymous " + getRandomName(),
                         email: resuser.email,
                         raw: JSON.stringify(resuser),
                     }

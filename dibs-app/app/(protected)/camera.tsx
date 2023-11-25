@@ -17,6 +17,7 @@ import Loader from "../../components/loader";
 import { useAuthContext } from "../../context/authprovider";
 
 import { Buffer } from "buffer";
+import Dib from "models/dib";
 
 
 export default function Snap() {
@@ -98,7 +99,7 @@ export default function Snap() {
 	async function uploadDib() {
 		console.log("[UP] Attempt Uploading dib")
 
-		if (!user || !image) { return; }
+		if (!user || !image || !location) { return; }
 
 		try {
 			// Create a reference to the storage bucket
@@ -118,8 +119,11 @@ export default function Snap() {
 
 			// Now you can store the download URL in Firestore or perform other actions as needed
 			const dibsCollection = collection(db, 'dibs');
-			const dibDocRef = await addDoc(dibsCollection, {
-				creator: user.uid,
+			const newDib: Dib = {
+				creator: {
+					uid: user.uid,
+					anonymousName: user.anonymousName,
+				},
 				url: downloadURL,
 				description: description,
 				likes: [],
@@ -129,7 +133,8 @@ export default function Snap() {
 					latitude: location?.coords.latitude,
 					longitude: location?.coords.longitude
 				}
-			});
+			}
+			const dibDocRef = await addDoc(dibsCollection, newDib);
 			console.log("Document written with ID: ", dibDocRef.id);
 
 			setImage(null);

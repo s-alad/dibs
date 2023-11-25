@@ -35,6 +35,7 @@ export default function ProtectedLayout() {
                     },
                     tabBarActiveTintColor: "#fff",
                     tabBarShowLabel: false,
+                    tabBarHideOnKeyboard: true,
                 }}
             >
                 <Tabs.Screen
