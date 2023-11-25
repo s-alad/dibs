@@ -85,5 +85,5 @@ export const anonymous = [
 ];
 
 export default function getRandomName() {
-    return anonymous[Math.floor(Math.random() * anonymous.length)];
+    return anonymous[Math.floor(Math.random() * anonymous.length)].replace(/\b\w/g, l => l.toUpperCase());
 }
