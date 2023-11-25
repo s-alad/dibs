@@ -1,8 +1,7 @@
-import { View, Text, TouchableOpacity, ScrollView,  StyleSheet } from "react-native";
-import React, {useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useFonts } from 'expo-font';
-import { useRouter } from "expo-router";
-import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from "react-native";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useFocusEffect, useRouter } from "expo-router";
+import { BottomSheetModal, BottomSheetModalProvider, BottomSheetBackdrop, BottomSheetBackdropProps } from '@gorhom/bottom-sheet';
 
 import { getFirestore, collection, getDocs, DocumentData } from 'firebase/firestore';
 import { app } from "../../services/firebase";
@@ -10,56 +9,70 @@ import { app } from "../../services/firebase";
 import Listing from "../../components/listing";
 import Report from "../../components/report";
 import Dib from "../../models/dib";
+import Loader from "../../components/loader";
+import Header from "../../components/header";
 
 export default function Home() {
-    const [fontsLoaded] = useFonts({
-        'Outfit-Regular': require('../../assets/fonts/Outfit-Regular.ttf'),
-        'Outfit-Black': require('../../assets/fonts/Outfit-Black.ttf'),
-        'Outfit-Light': require('../../assets/fonts/Outfit-Light.ttf'),
-        "Outfit-Medium": require("../../assets/fonts/Outfit-Medium.ttf"),
-        "Fascinate-Regular": require("../../assets/fonts/Fascinate-Regular.ttf"),
-    });
+    const db = getFirestore(app);
 
-    let listings = [
-        "listigng1",
-        "listing2",
-        "listing3",
-        "listing4"
-    ]
-
+    let [fetchingDibs, setFetchingDibs] = useState<boolean>(true);
     let [dibs, setDibs] = useState<Dib[]>([]);
 
-    const db = getFirestore(app);
-    useEffect(() => {
-        console.log("====================================");
-        (async () => {
-            const dibsCollection = collection(db, 'dibs');
-            const dibsSnapshot = await getDocs(dibsCollection);
+    async function getDibs() {
+        const dibsCollection = collection(db, 'dibs');
+        const dibsSnapshot = await getDocs(dibsCollection);
 
-            let ndibs: Dib[] = [];
-            dibsSnapshot.forEach((doc) => {
-                const data: DocumentData = doc.data();
-                ndibs.push(new Dib(data));
-            });
-            setDibs(ndibs);
-            
-        })();
-    }, []);
+        let ndibs: Dib[] = [];
+        dibsSnapshot.forEach((doc) => {
+            const id = doc.id;
+            const data: DocumentData = doc.data();
+            ndibs.push(new Dib(data, id));
+        });
+        console.log("[FETCH DIBS] Found " + ndibs.length + " dibs");
+        setDibs(ndibs);
+    }
+
+    useFocusEffect(
+        useCallback(() => {
+            console.log("[FETCH DIBS] ====================================");
+            getDibs().then(() => { setFetchingDibs(false); });
+
+            return () => {
+                console.log("[HOME UNFOCUS] ------------------------------------ \n"); console.log();
+                setFetchingDibs(true);
+            }
+        }, [])
+    );
 
 
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
     const snapPoints = useMemo(() => ['25%', '75%'], []);
-    const handlePresentModalPress = useCallback(() => {
-        bottomSheetModalRef.current?.present();
-    }, []);
+    const handlePresentModalPress = useCallback(() => { bottomSheetModalRef.current?.present(); }, []);
+    const renderBackdrop = useCallback((props: BottomSheetBackdropProps) => <BottomSheetBackdrop {...props}/>, []);
+
+    if (fetchingDibs) {
+        return (
+            <View style={{ display: "flex", flex: 1, alignItems: "center" }}>
+                <Header />
+                <Loader text="Fetching dibs..." load={true} />
+            </View>
+        );
+    }
+
+    if (dibs.length == 0) {
+        return (
+            <View style={{ display: "flex", flex: 1, alignItems: "center" }}>
+                <Header />
+                <Loader text="No dibs found." load={false} />
+            </View>
+        );
+    }
 
     return (
         <BottomSheetModalProvider>
             <View style={{ display: "flex", flex: 1, alignItems: "center" }}>
 
-                <View style={{ padding: 12 }}>
-                    <Text style={{ fontSize: 18, fontFamily: "Fascinate-Regular", }}>Dibs!</Text>
-                </View>
+                <Header />
 
                 <ScrollView
                     style={{ width: "100%" }}
@@ -68,25 +81,26 @@ export default function Home() {
                 >
                     {
                         dibs.map((d, i) => (
-                            <View style={{ alignItems: "center"}} key={i}>
+                            <View style={{ alignItems: "center" }} key={i}>
                                 <Listing onPress={handlePresentModalPress} dib={d} />
                             </View>
                         ))
                     }
                 </ScrollView>
-                
+
                 <BottomSheetModal
                     ref={bottomSheetModalRef}
                     index={1}
                     snapPoints={snapPoints}
                     backgroundStyle={{
                         backgroundColor: 'black'
-                        }}
-                    handleIndicatorStyle ={{
-                        backgroundColor:"grey"
                     }}
+                    handleIndicatorStyle={{
+                        backgroundColor: "white"
+                    }}
+                    backdropComponent={renderBackdrop}
                 >
-                    <Report/>
+                    <Report />
                 </BottomSheetModal>
             </View>
         </BottomSheetModalProvider>

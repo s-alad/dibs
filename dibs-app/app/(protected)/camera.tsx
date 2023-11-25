@@ -10,7 +10,7 @@ import * as Location from 'expo-location';
 import BottomSheet from '@gorhom/bottom-sheet';
 
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, doc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { db, auth, app } from "../../services/firebase";
 
 import Loader from "../../components/loader";
@@ -136,6 +136,11 @@ export default function Snap() {
 			}
 			const dibDocRef = await addDoc(dibsCollection, newDib);
 			console.log("Document written with ID: ", dibDocRef.id);
+
+			// add this document id to the users myDibs array
+			const userRef = doc(db, 'users', user.uid);
+			await updateDoc(userRef, { myDibs: arrayUnion(dibDocRef.id) });
+			console.log("Added dib to user's myDibs array");
 
 			setImage(null);
 			setDescription("");

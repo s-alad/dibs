@@ -1,18 +1,10 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert, Image } from "react-native";
-import { useFonts } from 'expo-font';
 import { useRouter } from "expo-router";
 
 export default function Login() {
 
     const router = useRouter();
-
-    const [fontsLoaded] = useFonts({
-        'Outfit-Regular': require('../../assets/fonts/Outfit-Regular.ttf'),
-        'Outfit-Black': require('../../assets/fonts/Outfit-Black.ttf'),
-        'Outfit-Light': require('../../assets/fonts/Outfit-Light.ttf'),
-    });
-
 
     return (
         <View style={{ display: "flex", flex: 1, alignItems: "center", backgroundColor: '#fff' }}>

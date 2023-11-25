@@ -1,6 +1,8 @@
 import { DocumentData } from 'firebase/firestore';
 
 export default class Dib {
+    readonly dibId?: string;
+
     readonly description: string;
     readonly url: string;
     readonly likes: string[];
@@ -15,7 +17,9 @@ export default class Dib {
         longitude: number,
     }
 
-    constructor(raw: DocumentData) {
+    constructor(raw: DocumentData, dibId: string) {
+        this.dibId = dibId;
+
         this.description = raw.description;
         this.url = raw.url;
         this.likes = raw.likes;
