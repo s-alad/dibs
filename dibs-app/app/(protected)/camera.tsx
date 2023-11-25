@@ -4,7 +4,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Camera, CameraCapturedPicture, CameraType, FlashMode } from 'expo-camera';
 import { Feather, Ionicons, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useSegments, useRouter, usePathname, useFocusEffect } from "expo-router";
-import * as MediaLibrary from 'expo-media-library';
+
+import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
 
 import BottomSheet from '@gorhom/bottom-sheet';
@@ -28,6 +29,7 @@ export default function Snap() {
 	const [location, setLocation] = useState<Location.LocationObject | null>(null);
 	const [locationString, setLocationString] = useState<string | null>(null);
 	const [image, setImage] = useState<string | null>(null);
+	const [processing, setProcessing] = useState<boolean>(false);
 	const [type, setType] = useState(CameraType.back);
 	const [flash, setFlash] = useState(FlashMode.off);
 	const cameraRef = useRef<Camera | null>(null);
@@ -54,7 +56,6 @@ export default function Snap() {
 	useEffect(() => {
 		(async () => {
 			console.log("[CAM] Requesting camera permissions")
-			await MediaLibrary.requestPermissionsAsync();
 			const cameraStatus = await Camera.requestCameraPermissionsAsync();
 			setHasCameraPermission(cameraStatus.status === 'granted');
 		})();
@@ -74,12 +75,31 @@ export default function Snap() {
 	async function takePicture() {
 		if (cameraRef) {
 			try {
+				setProcessing(true);
 				const photo: CameraCapturedPicture | undefined = await cameraRef.current?.takePictureAsync();
 				console.log(photo);
+				setProcessing(false);
 				if (photo) { setImage(photo.uri); }
 
 			} catch (error) { console.log(error); }
 		}
+	}
+
+	async function pickImage() {
+		try {
+			setProcessing(true);
+			let result = await ImagePicker.launchImageLibraryAsync({
+				mediaTypes: ImagePicker.MediaTypeOptions.Images,
+				allowsEditing: false,
+				quality: 1,
+			});
+			setProcessing(false);
+			if (!result.canceled) {
+				console.log(result.assets[0].uri);
+				setImage(result.assets[0].uri);
+			}
+		} catch (e) { console.log(e); }
+		
 	}
 
 	async function getLocation() {
@@ -99,8 +119,7 @@ export default function Snap() {
 	async function uploadDib() {
 		console.log("[UP] Attempt Uploading dib")
 
-		if (!user || !image || !location) { return; }
-
+		if (!user || !image || !location) { console.log('fail', location, image, user); return; }
 		try {
 			// Create a reference to the storage bucket
 			const storageRef = ref(storage, "dibs/" + user.uid + "/" + Date.now() + ".jpg");
@@ -250,6 +269,19 @@ export default function Snap() {
 						ref={cameraRef}
 						ratio="16:9"
 					>
+
+{
+						!image && processing ? 
+						<View style={{
+							position: "absolute", top: 0, left: 0, 
+							height: "100%", width: "100%", zIndex: 4, 
+							backgroundColor: "rgba(0,0,0,0.5)",
+							display: "flex", justifyContent: "center", alignItems: "center",
+						}}>
+							<ActivityIndicator size="large" color="#fff" />
+						</View>
+						: ''}
+
 						<View
 							style={{
 								position: "absolute",
@@ -281,7 +313,12 @@ export default function Snap() {
 								left: '26%',
 							}}
 						>
-							<MaterialCommunityIcons name="image-multiple-outline" size={24} color="white" />
+							<MaterialCommunityIcons name="image-multiple-outline" size={24} color="white" 
+								onPress={() => {
+									getLocation();
+									pickImage();
+								}}
+							/>
 						</View>
 
 						<View

@@ -7,6 +7,7 @@ import { getFirestore, doc, updateDoc, arrayUnion, getDoc, arrayRemove } from 'f
 import { app } from "../services/firebase";
 
 import * as Linking from 'expo-linking';
+import * as Location from 'expo-location';
 
 import { useAuthContext } from "../context/authprovider";
 
@@ -20,6 +21,7 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
     const { user } = useAuthContext();
 
     const [showCard, setshowCard] = useState(false);
+    const [locationString, setLocationString] = useState<string | null>("...");
     const [liked, setLiked] = useState<boolean>(dib.likes.includes(user?.uid || ""));
 
     async function heart() {
@@ -43,10 +45,22 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
         setAspect(width / height);
     })
 
-    function openDeviceMap() {
+    async function openDeviceMap() {
         const mapurl = `geo:0,0?q=${dib.location.latitude},${dib.location.longitude}`;
         Linking.openURL(mapurl);
     }
+
+    async function getReadableLocation() {
+        try {
+            let locationGeo = await Location.reverseGeocodeAsync({ latitude: dib.location.latitude, longitude: dib.location.longitude });
+            console.log(locationGeo);
+            
+            let locationString = `${locationGeo[0].country ?? ""}, ${locationGeo[0].region ?? ""}, ${locationGeo[0].district ?? ""}, ${locationGeo[0].streetNumber ?? ""}, ${locationGeo[0].street ?? ""}, ${locationGeo[0].postalCode ?? ""}`;
+            setLocationString(locationString);
+        } catch (e) { }
+        
+    }
+    getReadableLocation();
 
     return (
         <View
@@ -132,7 +146,10 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
                         ""
                         :
                         <TouchableWithoutFeedback>
-                            <View style={styles.card}><Text style={styles.addy}>Address</Text>
+                            <View style={styles.card}>
+                                <Text style={styles.addy}>
+                                    {locationString}
+                                </Text>
                                 <View style={styles.icons}>
 
                                     <TouchableOpacity onPress={heart}>
