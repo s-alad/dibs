@@ -60,6 +60,7 @@ export default function Home() {
                         ))
                     }
                 </ScrollView>
+                
                 <BottomSheetModal
                     ref={bottomSheetModalRef}
                     index={1}
