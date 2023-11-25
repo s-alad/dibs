@@ -1,9 +1,12 @@
-import Dib from "models/dib";
+import Dib from "../models/dib";
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Button, TouchableOpacity, BackHandler, Image, TouchableWithoutFeedback } from "react-native";
 import { AntDesign, Ionicons, Feather } from '@expo/vector-icons';
+
 import { getFirestore, doc, updateDoc, arrayUnion, getDoc, arrayRemove } from 'firebase/firestore';
 import { app } from "../services/firebase";
+
+import * as Linking from 'expo-linking';
 
 import { useAuthContext } from "../context/authprovider";
 
@@ -39,6 +42,11 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
     Image.getSize(dib.url, (width, height) => {
         setAspect(width / height);
     })
+
+    function openDeviceMap() {
+        const mapurl = `geo:0,0?q=${dib.location.latitude},${dib.location.longitude}`;
+        Linking.openURL(mapurl);
+    }
 
     return (
         <View
@@ -136,7 +144,9 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
                                         }
                                     </TouchableOpacity>
 
-                                    <Feather name="map" size={22} color="white" />
+                                    <TouchableOpacity onPress={openDeviceMap}>
+                                        <Feather name="map" size={22} color="white" />
+                                    </TouchableOpacity>
 
                                     <TouchableOpacity onPress={() => {onPress(); setshowCard(false)}}>
                                         <Ionicons name="flag-outline" size={22} color="white" />
