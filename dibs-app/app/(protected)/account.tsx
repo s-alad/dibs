@@ -69,47 +69,48 @@ export default function Account() {
     return (
         <BottomSheetModalProvider>
             <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "white", paddingTop: 20 }}>
-                <TouchableOpacity onPress={userLogout} style={{ alignSelf: "flex-start", left: 30, top: 20, position: 'absolute', zIndex: 9 }}>
-                    <Ionicons name="exit-outline" size={24} color="black" />
-                </TouchableOpacity>
+                
+                <View style={{width: "90%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",}}>
+                    <TouchableOpacity onPress={userLogout} style={{ alignSelf: "flex-start", top: 0, position: 'absolute', zIndex: 9 }}>
+                        <Ionicons name="exit-outline" size={24} color="black" />
+                    </TouchableOpacity>
 
-                <Image source={require('dibs-app/assets/Ellipse.png')} style={{ width: 120, height: 120, borderRadius: 200 / 2 }} />
-                <Text style={{ fontSize: 25, marginBottom: 10 }}>{user?.anonymousName}</Text>
+                    <Image source={require('dibs-app/assets/Ellipse.png')} style={{ width: 120, height: 120, borderRadius: 200 / 2 }} />
+                    <Text style={{ fontSize: 25, marginBottom: 10 }}>{user?.anonymousName}</Text>
+                </View>
 
                 {
                     fetchingLikedDibs ? <Loader text="Fetching liked dibs..." load={true} /> :
-                        likedDibs.length == 0 ? <Loader text="No liked dibs found." load={false} /> :
-                            <>
-                                <ScrollView
-                                    style={{
-                                        width: "100%",
-                                    }}
-                                    centerContent={true}
-                                >
-                                    {
-                                        likedDibs.map((d, i) => (
-                                            <View style={{ alignItems: "center" }} key={i}>
-                                                <Image source={require('dibs-app/assets/like.png')} style={{ alignSelf: "flex-end", marginRight: "6%" }} />
-                                                <Listing onPress={handlePresentModalPress} dib={d} />
-                                            </View>
-                                        ))
-                                    }
-                                </ScrollView>
-                                <BottomSheetModal
-                                    ref={bottomSheetModalRef}
-                                    index={1}
-                                    snapPoints={snapPoints}
-                                    backgroundStyle={{
-                                        backgroundColor: 'black'
-                                    }}
-                                    handleIndicatorStyle={{
-                                        backgroundColor: "grey"
-                                    }}
-                                    backdropComponent={renderBackdrop}
-                                >
-                                    <Report />
-                                </BottomSheetModal>
-                            </>
+                    likedDibs.length == 0 ? <Loader text="No liked dibs found." load={false} /> :
+                    <>
+                        <ScrollView
+                            style={{ width: "100%" }}
+                            contentContainerStyle={{ paddingBottom: 60 }}
+                            centerContent={true}
+                        >
+                            {
+                                likedDibs.map((d, i) => (
+                                    <View style={{ alignItems: "center" }} key={i}>
+                                        <Listing onPress={handlePresentModalPress} dib={d} />
+                                    </View>
+                                ))
+                            }
+                        </ScrollView>
+                        <BottomSheetModal
+                            ref={bottomSheetModalRef}
+                            index={1}
+                            snapPoints={snapPoints}
+                            backgroundStyle={{
+                                backgroundColor: 'black'
+                            }}
+                            handleIndicatorStyle={{
+                                backgroundColor: "grey"
+                            }}
+                            backdropComponent={renderBackdrop}
+                        >
+                            <Report />
+                        </BottomSheetModal>
+                    </>
                 }
             </View>
         </BottomSheetModalProvider>
