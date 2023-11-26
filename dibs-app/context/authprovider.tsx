@@ -26,7 +26,7 @@ export type AuthType = {
     userLogout: () => void;
 }
 
-type TAuthenticationStatus = "initial" | "started" | "authenticated" | "failed" | "error";
+type TAuthenticationStatus = "initial" | "started" | "authenticated" | "failed" | "error" | "onboarding";
 
 const AuthContext = createContext<AuthType>({
     user: null,
@@ -41,7 +41,6 @@ function useProtectedRoute(user: TUser | null, startedAuthentication: TAuthentic
     const segments = useSegments();
     const router = useRouter();
     const pathname = usePathname();
-
     useEffect(() => {
         const inAuthGroup = segments[0] === "(auth)";
         const currentRoute = pathname
@@ -52,7 +51,12 @@ function useProtectedRoute(user: TUser | null, startedAuthentication: TAuthentic
         else if (!user && !inAuthGroup ) {
             if (pathname !== "/welcome") { router.replace("/welcome"); } // Redirect to the welcome page.
         } else if (user && inAuthGroup) {
-            router.replace("/home"); // Redirect away from the sign-in page.
+            
+            if (startedAuthentication === "onboarding"){
+                router.replace("/onboard")
+            }
+            else{
+            router.replace("/home")}; // Redirect away from the sign-in page.
         }
     }, [user, segments, startedAuthentication]);
 }
@@ -79,6 +83,7 @@ export function AuthProvider({ children }: { children: JSX.Element }): JSX.Eleme
         const userExistsAlready = await userExistsInFirestore(user);
 
         if (!userExistsAlready) {
+            setAuthenticationStatus("onboarding")
             const userCollection = collection(db, 'users');
             const userDocRef = doc(userCollection, user.uid);
             await setDoc(userDocRef, {
@@ -91,6 +96,8 @@ export function AuthProvider({ children }: { children: JSX.Element }): JSX.Eleme
                 myDibs: [],
             });
         }
+        else{
+        setAuthenticationStatus("authenticated");}
     }
     
     // check if user exists in async storage, if so, set user
@@ -139,8 +146,8 @@ export function AuthProvider({ children }: { children: JSX.Element }): JSX.Eleme
                     AsyncStorage.setItem("@user", JSON.stringify(nuser)).then(async () => {
                         console.log("SET USER")
                         setUser(nuser);
-                        setAuthenticationStatus("authenticated");
                         await addUserToFirestore(nuser);
+                        
                     }).catch((err) => {
                         console.log(err)
                     })
