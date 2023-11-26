@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator, Button, Pressable } from "react-native";
-
+import { pictures } from "../../util/profilePictures";
 export default function Onboard() {
+    
     return (
         <>
             <Text style={styles.text}>You're In!</Text>

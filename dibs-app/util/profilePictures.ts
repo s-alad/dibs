@@ -4,3 +4,5 @@ export const pictures = {
     3:'dibs-app/assets/Ellipse3.png' ,
     4:'dibs-app/assets/Ellipse4.png'
 }
+export default pictures
+
