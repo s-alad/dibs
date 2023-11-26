@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator, Button, Pressable } from "react-native";
 import { pictures } from "../../util/profilePictures";
+import { useAuthContext } from "../../context/authprovider";
 export default function Onboard() {
     
+
+    const { user, userOnboard } = useAuthContext();
+
     return (
         <>
             <Text style={styles.text}>You're In!</Text>
@@ -17,7 +21,10 @@ export default function Onboard() {
                 <Image source={require('dibs-app/assets/Ellipse4.png')} style={styles.image} />
                 </View>
             </View>
-            <Pressable style={styles.button}><Text style={styles.textButton}>CONTINUE</Text></Pressable>
+            <Pressable style={styles.button}
+                onPress={() => userOnboard()}
+            
+            ><Text style={styles.textButton}>CONTINUE</Text></Pressable>
 
             
         </>

@@ -24,6 +24,7 @@ export type AuthType = {
     authenticationStatus?: TAuthenticationStatus;
     userLogin: () => void;
     userLogout: () => void;
+    userOnboard: () => void;
 }
 
 type TAuthenticationStatus = "initial" | "started" | "authenticated" | "failed" | "error" | "onboarding";
@@ -33,6 +34,7 @@ const AuthContext = createContext<AuthType>({
     authenticationStatus: "initial",
     userLogin: () => { },
     userLogout: () => { },
+    userOnboard: () => { },
 });
 
 export const useAuthContext = () => useContext(AuthContext);
@@ -50,13 +52,13 @@ function useProtectedRoute(user: TUser | null, startedAuthentication: TAuthentic
         }
         else if (!user && !inAuthGroup ) {
             if (pathname !== "/welcome") { router.replace("/welcome"); } // Redirect to the welcome page.
-        } else if (user && inAuthGroup) {
-            
-            if (startedAuthentication === "onboarding"){
+        } else if (user && inAuthGroup) { // Redirect away from the sign-in page.
+            if (startedAuthentication === "onboarding") {
                 router.replace("/onboard")
             }
-            else{
-            router.replace("/home")}; // Redirect away from the sign-in page.
+            else {
+                router.replace("/home")
+            }; 
         }
     }, [user, segments, startedAuthentication]);
 }
@@ -181,12 +183,18 @@ export function AuthProvider({ children }: { children: JSX.Element }): JSX.Eleme
         }).catch((err) => { console.log(err) })
     }
 
+    async function userOnboard() {
+        console.log("[UL] - ONBOARD")
+        setAuthenticationStatus("authenticated");
+    }
+
     useProtectedRoute(user, authenticationStatus);
 
     const authContext: AuthType = {
         user,
         userLogin,
         userLogout,
+        userOnboard,
         authenticationStatus,
     };
 
