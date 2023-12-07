@@ -24,6 +24,7 @@ export default function ProtectedLayout() {
             height: "100%",
             width: "100%",
             position: "absolute",
+            backgroundColor:"black"
         }}>
             <Tabs
                 initialRouteName="home"

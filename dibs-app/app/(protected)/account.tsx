@@ -68,15 +68,15 @@ export default function Account() {
 
     return (
         <BottomSheetModalProvider>
-            <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "white", paddingTop: 20 }}>
+            <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "black", paddingTop: 20 }}>
                 
                 <View style={{width: "90%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",}}>
                     <TouchableOpacity onPress={userLogout} style={{ alignSelf: "flex-start", top: 0, position: 'absolute', zIndex: 9 }}>
-                        <Ionicons name="exit-outline" size={24} color="black" />
+                        <Ionicons name="exit-outline" size={24} color="white" />
                     </TouchableOpacity>
 
                     <Image source={require('dibs-app/assets/Ellipse.png')} style={{ width: 120, height: 120, borderRadius: 200 / 2 }} />
-                    <Text style={{ fontSize: 25, marginBottom: 10 }}>{user?.anonymousName}</Text>
+                    <Text style={{ fontSize: 25, marginBottom: 10, color: "white" }}>{user?.anonymousName}</Text>
                 </View>
 
                 {

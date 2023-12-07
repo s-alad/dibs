@@ -96,6 +96,7 @@ export function AuthProvider({ children }: { children: JSX.Element }): JSX.Eleme
                 raw: user.raw,
                 likedDibs: [],
                 myDibs: [],
+                selectedPicture: -1,
             });
         }
         else{

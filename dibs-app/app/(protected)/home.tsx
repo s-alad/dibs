@@ -17,7 +17,6 @@ export default function Home() {
 
     let [fetchingDibs, setFetchingDibs] = useState<boolean>(true);
     let [dibs, setDibs] = useState<Dib[]>([]);
-
     async function getDibs() {
         const dibsCollection = collection(db, 'dibs');
         const dibsSnapshot = await getDocs(dibsCollection);
@@ -44,12 +43,11 @@ export default function Home() {
         }, [])
     );
 
-
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
     const snapPoints = useMemo(() => ['25%', '75%'], []);
     const handlePresentModalPress = useCallback(() => { bottomSheetModalRef.current?.present(); }, []);
     const renderBackdrop = useCallback((props: BottomSheetBackdropProps) => <BottomSheetBackdrop {...props}/>, []);
-
+ 
     if (fetchingDibs) {
         return (
             <View style={{ display: "flex", flex: 1, alignItems: "center" }}>
@@ -70,12 +68,12 @@ export default function Home() {
 
     return (
         <BottomSheetModalProvider>
-            <View style={{ display: "flex", flex: 1, alignItems: "center" }}>
+            <View style={{ display: "flex", flex: 1, alignItems: "center", backgroundColor: "black" }}>
 
                 <Header />
 
                 <ScrollView
-                    style={{ width: "100%" }}
+                    style={{ width: "100%" , marginTop:30}}
                     contentContainerStyle={{ paddingBottom: 60 }}
                     centerContent={true}
                 >

@@ -106,7 +106,7 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
 
                     <Text
                         style={{
-                            color: "black",
+                            color: "white",
                             fontFamily: 'Lato',
                             fontSize: 13,
                         }}
@@ -116,15 +116,7 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
 
                 </View>
 
-                <Text
-                    style={{
-                        color: "#898989",
-                        fontFamily: 'Lato',
-                        fontSize: 10,
-                    }}
-                >
-                    Posted {new Date(dib.timestamp).toLocaleDateString()}
-                </Text>
+                
             </View>
             
             <TouchableOpacity style={styles.square} onPress={() => setshowCard(!showCard)} activeOpacity={1}>
@@ -135,6 +127,8 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
                         /* aspectRatio: aspect, */
                         borderTopLeftRadius: 20,
                         borderTopRightRadius: 20,
+                        borderBottomLeftRadius: 20,
+                        borderBottomRightRadius:20,
                         resizeMode: "cover",
                     }}
                     source={{
@@ -178,12 +172,21 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
             <View style={styles.textContainer}>
                 <View style={{
                     flex: 1,
-                    paddingHorizontal: 24,
+                    
                     paddingVertical: 12,
                 }}>
-                    <Text style={{color: "black"}}>
+                    <Text style={{color: "white"}}>
                         {dib.description}
                     </Text>
+                    <Text
+                    style={{
+                        color: "#898989",
+                        fontFamily: 'Lato',
+                        fontSize: 10,
+                    }}
+                >
+                    Posted {new Date(dib.timestamp).toLocaleDateString()}
+                </Text>
                 </View>
             </View>
             
@@ -193,7 +196,7 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
 
 const styles = StyleSheet.create({
     square: {
-        backgroundColor: "lightgrey",
+        backgroundColor: "black",
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         width: "100%",
@@ -203,7 +206,7 @@ const styles = StyleSheet.create({
     },
 
     card: {
-        backgroundColor: 'rgba(0, 0, 0, 1)',
+        backgroundColor: 'black',
         borderRadius: 20,
         height: 150,
         width: "80%",
@@ -215,9 +218,7 @@ const styles = StyleSheet.create({
     },
     textContainer:
     {
-        backgroundColor: 'rgba(0, 0, 0, 0.3)',
-        borderBottomLeftRadius: 20,
-        borderBottomRightRadius: 20,
+        backgroundColor: 'black',
         width: "100%",
         display: "flex",
     },
