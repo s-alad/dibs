@@ -9,24 +9,11 @@ export default function Login() {
     const { user, userLogin, authenticationStatus} = useAuthContext();
 
     return (
-        <View style={{ display: "flex", flex: 1, alignItems: "center"}}>
+        <View style={{ display: "flex", flex: 1, alignItems: "center", backgroundColor:"black"}}>
             <View style={{height: "25%"}}></View> 
 
-            <View style={{width: "80%"}}>
-                <TouchableOpacity>
-                    <Text style={{color: 'black', fontFamily: "Outfit-Medium", fontSize: 45}}>Log-in</Text>
-                </TouchableOpacity>
-
-                <Text
-                    style={{
-                        color: 'black',
-                        fontFamily: "Outfit-Light",
-                        paddingTop: 12,
-                        fontSize: 15,
-                    }}
-                >
-                    To continue, please use a valid Boston University email google account.
-                </Text>
+            <View style={{width: "80%", alignItems:"center"}}>
+                <Image source={require("../../assets/bigLogo.png")} style={{width: 500, height: "50%", alignSelf:"center"}}/>
                 <TouchableOpacity onPress={
                     () => {
                         userLogin()
@@ -34,16 +21,14 @@ export default function Login() {
                 }>
                     <View 
                         style={{
-                            marginTop: 30,
                             backgroundColor: 'black',
-                            width: "80%",
+                            width: 50,
                             height: 50,
-                            borderRadius: 32,
-                            display: "flex",
+                            borderRadius: 50/2,
                             justifyContent: "center",
                             alignItems: "center",
-                            flexDirection: "row",
-                            gap: 20,
+                            borderColor:"grey",
+                            borderWidth:2,
                         }}
                     >
                         <Image
@@ -51,33 +36,28 @@ export default function Login() {
                             style={{
                                 width: 26,
                                 height: 26,
-                            }}
-                        ></Image>
-                        <Text
-                            style={{
-                                color: 'white',
-                                fontFamily: "Outfit-Medium",
-                                fontSize: 15,
-                                textAlign: "center",
-                            }}
-                        >Login With Google</Text>
+                            }}/>
                     </View>
                 </TouchableOpacity>
                 <Text
                     style={{
-                        color: 'black',
+                        color: 'red',
                         fontFamily: "Outfit-Light",
                         marginTop: 30,
                         fontSize: 15,
+                        textAlign: "center",
                     }}
                 >
                     {
-                        authenticationStatus === "failed" ? "please ensure you are using a bu.edu email" : (
+                        authenticationStatus === "failed" ? "Please enter a valid Boston University email address. " : (
                             authenticationStatus === "started" ? <ActivityIndicator size="small" color="#000" /> : (
                                 authenticationStatus === "authenticated" ? <ActivityIndicator size="small" color="#0000ff" /> : ""
                             )
                         )
                     }
+                </Text>
+                <Text style={{textAlign:"center", marginHorizontal: 30, marginTop: 50, color:"white"}}>
+                This version is currently only available to <Text style={{fontWeight:"bold"}}>Boston University</Text> students.  
                 </Text>
             </View>
         </View>

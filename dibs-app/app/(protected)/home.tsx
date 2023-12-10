@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from "react-nati
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useFocusEffect, useRouter } from "expo-router";
 import { BottomSheetModal, BottomSheetModalProvider, BottomSheetBackdrop, BottomSheetBackdropProps } from '@gorhom/bottom-sheet';
-
+import { AntDesign, Ionicons, Feather } from '@expo/vector-icons';
 import { getFirestore, collection, getDocs, DocumentData } from 'firebase/firestore';
 import { app } from "../../services/firebase";
 
