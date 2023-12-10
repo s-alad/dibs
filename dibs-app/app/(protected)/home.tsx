@@ -46,8 +46,8 @@ export default function Home() {
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
     const snapPoints = useMemo(() => ['25%', '75%'], []);
     const handlePresentModalPress = useCallback(() => { bottomSheetModalRef.current?.present(); }, []);
-    const renderBackdrop = useCallback((props: BottomSheetBackdropProps) => <BottomSheetBackdrop {...props}/>, []);
- 
+    const renderBackdrop = useCallback((props: BottomSheetBackdropProps) => <BottomSheetBackdrop {...props} />, []);
+
     if (fetchingDibs) {
         return (
             <View style={{ display: "flex", flex: 1, alignItems: "center" }}>
@@ -73,14 +73,14 @@ export default function Home() {
                 <Header />
 
                 <ScrollView
-                    style={{ width: "100%" , marginTop:30}}
+                    style={{width:"100%", marginTop: 30 }}
                     contentContainerStyle={{ paddingBottom: 60 }}
                     centerContent={true}
                 >
                     {
                         dibs.map((d, i) => (
                             <View style={{ alignItems: "center" }} key={i}>
-                                <Listing onPress={handlePresentModalPress} dib={d} />
+                            <Listing onPress={handlePresentModalPress} dib={d} />
                             </View>
                         ))
                     }

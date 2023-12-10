@@ -1,8 +1,14 @@
 import Dib from "../models/dib";
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Button, TouchableOpacity, BackHandler, Image, TouchableWithoutFeedback } from "react-native";
+import { View, Text, StyleSheet, Button, TouchableOpacity, BackHandler, Image, TouchableWithoutFeedback, Pressable } from "react-native";
 import { AntDesign, Ionicons, Feather } from '@expo/vector-icons';
-
+import {
+    Menu,
+    MenuOptions,
+    MenuOption,
+    MenuTrigger,
+} from "react-native-popup-menu";
+import { Entypo } from "@expo/vector-icons";
 import { getFirestore, doc, updateDoc, arrayUnion, getDoc, arrayRemove } from 'firebase/firestore';
 import { app } from "../services/firebase";
 
@@ -10,6 +16,7 @@ import * as Linking from 'expo-linking';
 import * as Location from 'expo-location';
 
 import { useAuthContext } from "../context/authprovider";
+import { convertToRGBA } from "react-native-reanimated";
 
 interface IListing {
     dib: Dib;
@@ -54,72 +61,36 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
         try {
             let locationGeo = await Location.reverseGeocodeAsync({ latitude: dib.location.latitude, longitude: dib.location.longitude });
             console.log(locationGeo);
-            
+
             let locationString = `${locationGeo[0].country ?? ""}, ${locationGeo[0].region ?? ""}, ${locationGeo[0].district ?? ""}, ${locationGeo[0].streetNumber ?? ""}, ${locationGeo[0].street ?? ""}, ${locationGeo[0].postalCode ?? ""}`;
             setLocationString(locationString);
         } catch (e) { }
-        
+
     }
     getReadableLocation();
 
     return (
-        <View
-            style={{
-                display: "flex",
-                flexDirection: "column",
-                width: "90%",
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-                marginBottom: 30,
-            }}
-        >
-            
-            <View
-                style={{
-                    width: "100%",
-                    height: 30,
-                    marginBottom: 6,
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                }}
-            >
-                <View
-                    style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 10,
-                    }}
-                >
-                    <View
-                        style={{
-                            borderRadius: 100,
-                            width: 30,
-                            height: 30,
-                            backgroundColor: 'yellow'
-                        }}
-                    >
-                    </View>
+        <View style={{ width: "95%", display: "flex", flexDirection: "column", alignItems: "center", backgroundColor: 'black', marginBottom: 8 }}>
+            <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width: "95%" }}>
+                <Text style={{ color: "white", fontFamily: 'Lato', fontSize: 14, }}>This is a header {locationString}</Text>
+                <Menu style={{ alignSelf: "flex-end" }}>
+                    <MenuTrigger>
+                        <Entypo name="dots-three-horizontal" size={24} color="white" />
+                    </MenuTrigger>
+                    <MenuOptions customStyles={optionsStyles} >
+                        <MenuOption value={1} onSelect={() => { onPress(); setshowCard(false) }} style={{ display: "flex", flexDirection: "row", gap: 20, alignItems: "center" }}>
+                            <Ionicons name="flag-outline" size={18} color="white" />
+                            <Text style={{ color: "white" }}>Report Post</Text>
+                        </MenuOption>
+                        <MenuOption value={2} onSelect={() => openDeviceMap()} style={{ display: "flex", flexDirection: "row", gap: 20, alignItems: "center" }}>
+                            <Feather name="map" size={18} color="white" />
+                            <Text style={{ color: "white" }}>Take me there</Text>
+                        </MenuOption>
 
-                    <Text
-                        style={{
-                            color: "white",
-                            fontFamily: 'Lato',
-                            fontSize: 13,
-                        }}
-                    >
-                        {dib.creator.anonymousName.replace(/\b\w/g, l => l.toUpperCase())}
-                    </Text>
-
-                </View>
-
-                
+                    </MenuOptions>
+                </Menu>
             </View>
-            
-            <TouchableOpacity style={styles.square} onPress={() => setshowCard(!showCard)} activeOpacity={1}>
+            <View style={{width: "100%", position: "relative"}}>
                 <Image
                     style={{
                         width: "100%",
@@ -128,68 +99,77 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
                         borderTopLeftRadius: 20,
                         borderTopRightRadius: 20,
                         borderBottomLeftRadius: 20,
-                        borderBottomRightRadius:20,
+                        borderBottomRightRadius: 20,
                         resizeMode: "cover",
+                      
                     }}
                     source={{
                         uri: dib.url,
                     }}
                 />
-                {
-                    !showCard ?
-                        ""
-                        :
-                        <TouchableWithoutFeedback>
-                            <View style={styles.card}>
-                                <Text style={styles.addy}>
-                                    {locationString}
-                                </Text>
-                                <View style={styles.icons}>
+                <TouchableOpacity onPress={heart} style ={{position: "absolute", zIndex: 10, bottom: 10, right: 10}}>
+                    {
+                        liked ?
+                            <AntDesign name="heart" size={22} color="red" />
+                            :
+                            <AntDesign name="hearto" size={22} color="white" />
+                    }
+                </TouchableOpacity>
+            </View>
+            {
+                !showCard ?
+                    ""
+                    :
+                    <TouchableWithoutFeedback>
+                        <View style={styles.card}>
+                            <Text style={styles.addy}>
+                                {locationString}
+                            </Text>
+                            <View style={styles.icons}>
 
-                                    <TouchableOpacity onPress={heart}>
-                                        {
-                                            liked ? 
+                                <TouchableOpacity onPress={heart}>
+                                    {
+                                        liked ?
                                             <AntDesign name="heart" size={22} color="red" />
-                                            : 
+                                            :
                                             <AntDesign name="hearto" size={22} color="white" />
-                                        }
-                                    </TouchableOpacity>
+                                    }
+                                </TouchableOpacity>
 
-                                    <TouchableOpacity onPress={openDeviceMap}>
-                                        <Feather name="map" size={22} color="white" />
-                                    </TouchableOpacity>
+                                <TouchableOpacity onPress={openDeviceMap}>
+                                    <Feather name="map" size={22} color="white" />
+                                </TouchableOpacity>
 
-                                    <TouchableOpacity onPress={() => {onPress(); setshowCard(false)}}>
-                                        <Ionicons name="flag-outline" size={22} color="white" />
-                                    </TouchableOpacity>
+                                <TouchableOpacity onPress={() => { onPress(); setshowCard(false) }}>
+                                    <Ionicons name="flag-outline" size={22} color="white" />
+                                </TouchableOpacity>
 
-                                </View>
                             </View>
-                        </TouchableWithoutFeedback>
-                }
-            </TouchableOpacity>
+                        </View>
+                    </TouchableWithoutFeedback>
+            }
+
 
             <View style={styles.textContainer}>
                 <View style={{
                     flex: 1,
-                    
+
                     paddingVertical: 12,
                 }}>
-                    <Text style={{color: "white"}}>
+                    <Text style={{ color: "white" }}>
                         {dib.description}
                     </Text>
                     <Text
-                    style={{
-                        color: "#898989",
-                        fontFamily: 'Lato',
-                        fontSize: 10,
-                    }}
-                >
-                    Posted {new Date(dib.timestamp).toLocaleDateString()}
-                </Text>
+                        style={{
+                            color: "#898989",
+                            fontFamily: 'Lato',
+                            fontSize: 10,
+                        }}
+                    >
+                        Posted {new Date(dib.timestamp).toLocaleDateString()}
+                    </Text>
                 </View>
             </View>
-            
         </View>
     )
 }
@@ -203,6 +183,7 @@ const styles = StyleSheet.create({
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        zIndex: 1
     },
 
     card: {
@@ -214,7 +195,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         display: "flex",
         position: "absolute",
-
+        zIndex: 1
     },
     textContainer:
     {
@@ -238,3 +219,25 @@ const styles = StyleSheet.create({
     }
 
 });
+const optionsStyles = {
+    optionsContainer: {
+        backgroundColor: "#161616",
+        padding: 5,
+        borderRadius: 10,
+    },
+    optionsWrapper: {
+        backgroundColor: "#161616",
+    },
+    optionWrapper: {
+        backgroundColor: "#161616",
+        margin: 5,
+
+    },
+    optionTouchable: {
+        underlayColor: "#161616",
+        activeOpacity: 70,
+    },
+    optionText: {
+        color: 'white',
+    },
+};
