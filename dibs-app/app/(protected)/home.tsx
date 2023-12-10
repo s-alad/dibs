@@ -79,7 +79,7 @@ export default function Home() {
                 >
                     {
                         dibs.map((d, i) => (
-                            <View style={{ alignItems: "center" }} key={i}>
+                            <View style={{ alignItems: "center" , marginBottom: 15}} key={i}>
                             <Listing onPress={handlePresentModalPress} dib={d} />
                             </View>
                         ))
