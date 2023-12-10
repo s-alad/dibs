@@ -107,7 +107,7 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
                         uri: dib.url,
                     }}
                 />
-                <TouchableOpacity onPress={heart} style ={{position: "absolute", zIndex: 10, bottom: 10, right: 10}}>
+                <TouchableOpacity onPress={heart} style ={{position: "absolute", zIndex: 10, bottom: 24, right: 24}}>
                     {
                         liked ?
                             <AntDesign name="heart" size={22} color="red" />
@@ -116,40 +116,7 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
                     }
                 </TouchableOpacity>
             </View>
-            {
-                !showCard ?
-                    ""
-                    :
-                    <TouchableWithoutFeedback>
-                        <View style={styles.card}>
-                            <Text style={styles.addy}>
-                                {locationString}
-                            </Text>
-                            <View style={styles.icons}>
-
-                                <TouchableOpacity onPress={heart}>
-                                    {
-                                        liked ?
-                                            <AntDesign name="heart" size={22} color="red" />
-                                            :
-                                            <AntDesign name="hearto" size={22} color="white" />
-                                    }
-                                </TouchableOpacity>
-
-                                <TouchableOpacity onPress={openDeviceMap}>
-                                    <Feather name="map" size={22} color="white" />
-                                </TouchableOpacity>
-
-                                <TouchableOpacity onPress={() => { onPress(); setshowCard(false) }}>
-                                    <Ionicons name="flag-outline" size={22} color="white" />
-                                </TouchableOpacity>
-
-                            </View>
-                        </View>
-                    </TouchableWithoutFeedback>
-            }
-
-
+            
             <View style={styles.textContainer}>
                 <View style={{
                     flex: 1,
