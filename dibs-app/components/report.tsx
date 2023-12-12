@@ -2,11 +2,33 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Pressable, Image, TextInput} from "react-native";
 import Divider from './divider';
 
-const Report = () => {
+import { getFirestore, doc, updateDoc, arrayUnion, getDoc, arrayRemove } from 'firebase/firestore';
+import { app } from "../services/firebase";
+
+import { useAuthContext } from '../context/authprovider';
+import Dib from '../models/dib';
+
+interface IReport {
+    dib: Dib | null;
+}
+
+export default function Report({ dib }: IReport) {
+
+    const db = getFirestore(app);
+    const { user } = useAuthContext();
+
     const [clicked, setClicked] = useState(false);
     const [reported, setReported] = useState(false);
     const [text, onChangeText] = React.useState('Text');
-    const click = () => {
+    
+    async function click (type: string) {
+        if (!user || !dib?.dibId) { return }
+
+        const dibRef = doc(db, 'dibs', dib.dibId);
+        const userRef = doc(db, 'users', user.uid);
+
+        await updateDoc(dibRef, { reports: arrayUnion(user.uid) });
+
         setClicked(true)
     }
     const report = () => {
@@ -22,10 +44,10 @@ const Report = () => {
                 <Text style={styles.p}>Your report will remain anonymous.</Text>
             </View>
 
-            <Pressable onPress={click} style={styles.button}><Text style={styles.buttonText}>Bullying or harrasment</Text></Pressable>
-            <Pressable onPress={click} style={styles.button}><Text style={styles.buttonText}>Scam or fraud</Text></Pressable>
-            <Pressable onPress={click} style={styles.button}><Text style={styles.buttonText}>Inappropiate imagery</Text></Pressable>
-            <Pressable onPress={click} style={styles.button}><Text style={styles.buttonText}>Sale of illegal or regulated goods</Text></Pressable>
+            <Pressable onPress={() => click("1")} style={styles.button}><Text style={styles.buttonText}>Bullying or harrasment</Text></Pressable>
+            <Pressable onPress={() => click("2")} style={styles.button}><Text style={styles.buttonText}>Scam or fraud</Text></Pressable>
+            <Pressable onPress={() => click("3")} style={styles.button}><Text style={styles.buttonText}>Inappropiate imagery</Text></Pressable>
+            <Pressable onPress={() => click("4")} style={styles.button}><Text style={styles.buttonText}>Sale of illegal or regulated goods</Text></Pressable>
             <Pressable onPress={report} style={styles.button}><Text style={styles.buttonText}>Something else</Text></Pressable></>}
 
         {clicked && <>
@@ -38,7 +60,7 @@ const Report = () => {
             <Divider />
             <Text style = {{color: "white", margin: 20}}>Help us understand the problem</Text>
             <TextInput style = {styles.textInput} onChangeText={onChangeText} value={text} textAlignVertical="top"/>
-            <Pressable onPress = {click} style={styles.buttonSubmit}><Text style = {{fontSize: 15, textAlign: "center" }}>Submit</Text></Pressable>
+            <Pressable onPress = {() => click("5")} style={styles.buttonSubmit}><Text style = {{fontSize: 15, textAlign: "center" }}>Submit</Text></Pressable>
         </>}
 
     </View>
@@ -122,4 +144,3 @@ const styles = StyleSheet.create({
     }
 
 })
-export default Report;

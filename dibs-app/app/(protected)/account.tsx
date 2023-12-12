@@ -64,6 +64,7 @@ export default function Account() {
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
     const snapPoints = useMemo(() => ['25%', '75%'], []);
     const renderBackdrop = useCallback((props: BottomSheetBackdropProps) => <BottomSheetBackdrop {...props} />, []);
+    const [reportingDib, setReportingDib] = useState<Dib | null>(null);
     const handlePresentModalPress = useCallback(() => { bottomSheetModalRef.current?.present(); }, []);
 
     const generateColor = () => {
@@ -118,36 +119,41 @@ export default function Account() {
                 </Modal>
                 {
                     fetchingLikedDibs ? <Loader text="Fetching liked dibs..." load={true} /> :
-                        likedDibs.length == 0 ? <Loader text="No liked dibs found." load={false} /> :
-                            <>
-                                <ScrollView
-                                    style={{ width: "100%" }}
-                                    contentContainerStyle={{ paddingBottom: 60 }}
-                                    centerContent={true}
-                                >
-                                    {
-                                        likedDibs.map((d, i) => (
-                                            <View style={{ alignItems: "center" }} key={i}>
-                                                <Listing onPress={handlePresentModalPress} dib={d} />
-                                            </View>
-                                        ))
-                                    }
-                                </ScrollView>
-                                <BottomSheetModal
-                                    ref={bottomSheetModalRef}
-                                    index={1}
-                                    snapPoints={snapPoints}
-                                    backgroundStyle={{
-                                        backgroundColor: 'black'
-                                    }}
-                                    handleIndicatorStyle={{
-                                        backgroundColor: "grey"
-                                    }}
-                                    backdropComponent={renderBackdrop}
-                                >
-                                    <Report />
-                                </BottomSheetModal>
-                            </>
+                    likedDibs.length == 0 ? <Loader text="No liked dibs found." load={false} /> :
+                    <>
+                        <ScrollView
+                            style={{ width: "100%" }}
+                            contentContainerStyle={{ paddingBottom: 60 }}
+                            centerContent={true}
+                        >
+                            {
+                                likedDibs.map((d, i) => (
+                                    <View style={{ alignItems: "center" }} key={i}>
+                                        <Listing onPress={ () => {
+                                            setReportingDib(d);
+                                            handlePresentModalPress();
+                                        }} dib={d} />
+                                    </View>
+                                ))
+                            }
+                        </ScrollView>
+                        <BottomSheetModal
+                            ref={bottomSheetModalRef}
+                            index={1}
+                            snapPoints={snapPoints}
+                            backgroundStyle={{
+                                backgroundColor: 'black'
+                            }}
+                            handleIndicatorStyle={{
+                                backgroundColor: "grey"
+                            }}
+                            backdropComponent={renderBackdrop}
+                        >
+                            <Report
+                                dib={reportingDib}
+                            />
+                        </BottomSheetModal>
+                    </>
                 }
             </View>
         </BottomSheetModalProvider>

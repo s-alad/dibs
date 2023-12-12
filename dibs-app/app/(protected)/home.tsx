@@ -46,11 +46,12 @@ export default function Home() {
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
     const snapPoints = useMemo(() => ['25%', '75%'], []);
     const handlePresentModalPress = useCallback(() => { bottomSheetModalRef.current?.present(); }, []);
-    const renderBackdrop = useCallback((props: BottomSheetBackdropProps) => <BottomSheetBackdrop {...props} />, []);
-
+    const [reportingDib, setReportingDib] = useState<Dib | null>(null);
+    const renderBackdrop = useCallback((props: BottomSheetBackdropProps) => <BottomSheetBackdrop {...props}/>, []);
+ 
     if (fetchingDibs) {
         return (
-            <View style={{ display: "flex", flex: 1, alignItems: "center" }}>
+            <View style={{ display: "flex", flex: 1, alignItems: "center", backgroundColor: '#000' }}>
                 <Header />
                 <Loader text="Fetching dibs..." load={true} />
             </View>
@@ -59,7 +60,7 @@ export default function Home() {
 
     if (dibs.length == 0) {
         return (
-            <View style={{ display: "flex", flex: 1, alignItems: "center" }}>
+            <View style={{ display: "flex", flex: 1, alignItems: "center", backgroundColor: '#000' }}>
                 <Header />
                 <Loader text="No dibs found." load={false} />
             </View>
@@ -79,8 +80,11 @@ export default function Home() {
                 >
                     {
                         dibs.map((d, i) => (
-                            <View style={{ alignItems: "center" , marginBottom: 15}} key={i}>
-                            <Listing onPress={handlePresentModalPress} dib={d} />
+                            <View style={{ alignItems: "center" }} key={i}>
+                                <Listing onPress={ () => {
+                                    setReportingDib(d);
+                                    handlePresentModalPress();
+                                }} dib={d} />
                             </View>
                         ))
                     }
@@ -98,7 +102,9 @@ export default function Home() {
                     }}
                     backdropComponent={renderBackdrop}
                 >
-                    <Report />
+                    <Report 
+                        dib={reportingDib}
+                    />
                 </BottomSheetModal>
             </View>
         </BottomSheetModalProvider>

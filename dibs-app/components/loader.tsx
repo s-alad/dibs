@@ -16,7 +16,7 @@ export default function Loader({ text = "Loading", load = true }: LoaderProps ) 
 				gap: 20,
 			}}
 		>
-			<Text>{text}</Text>
-			{load ? <ActivityIndicator size="large" color="black"/> : ""}
+			<Text style={{ color: "white"}}>{text}</Text>
+			{load ? <ActivityIndicator size="large" color="white"/> : ""}
 		</View>
 }
