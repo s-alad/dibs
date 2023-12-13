@@ -27,13 +27,25 @@ export default function Report({ dib }: IReport) {
         const dibRef = doc(db, 'dibs', dib.dibId);
         const userRef = doc(db, 'users', user.uid);
 
-        await updateDoc(dibRef, { reports: arrayUnion(user.uid) });
+        let reportType: { [key: string]: string } = {
+            "1": "Bullying or harrasment",
+            "2": "Scam or fraud",
+            "3": "Inappropiate imagery",
+            "4": "Sale of illegal or regulated goods",
+            "5": "CUSTOM: " + text
+        }
+
+        let rep = {
+            "type": reportType[type],
+            "user": user.uid,
+        }
+
+        await updateDoc(dibRef, { reports: arrayUnion(rep) });
+        await updateDoc(userRef, { reportedDibs: arrayUnion(dib.dibId) });
 
         setClicked(true)
     }
-    const report = () => {
-        setReported(true)
-    }
+
     return <View style={styles.report}>
 
         {!clicked && !reported && <>
@@ -48,13 +60,15 @@ export default function Report({ dib }: IReport) {
             <Pressable onPress={() => click("2")} style={styles.button}><Text style={styles.buttonText}>Scam or fraud</Text></Pressable>
             <Pressable onPress={() => click("3")} style={styles.button}><Text style={styles.buttonText}>Inappropiate imagery</Text></Pressable>
             <Pressable onPress={() => click("4")} style={styles.button}><Text style={styles.buttonText}>Sale of illegal or regulated goods</Text></Pressable>
-            <Pressable onPress={report} style={styles.button}><Text style={styles.buttonText}>Something else</Text></Pressable></>}
+            <Pressable onPress={() => setReported(true)} style={styles.button}><Text style={styles.buttonText}>Something else</Text></Pressable></>
+        }
 
         {clicked && <>
             <Image style={styles.check} source={require('dibs-app/assets/check.png')} />
             <Text style={styles.textFinal}>Thanks for letting us know!</Text>
             <Text style={styles.smallfinal}>Your feedback is important in helping us keep the Dibs! community safe.</Text>
         </>}
+
         {reported && !clicked && <>
             <Text style={styles.header}>Report</Text>
             <Divider />
