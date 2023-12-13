@@ -7,6 +7,7 @@ import {
     MenuOptions,
     MenuOption,
     MenuTrigger,
+    renderers
 } from "react-native-popup-menu";
 import { Entypo } from "@expo/vector-icons";
 import { getFirestore, doc, updateDoc, arrayUnion, getDoc, arrayRemove } from 'firebase/firestore';
@@ -27,8 +28,8 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
     const db = getFirestore(app);
     const { user } = useAuthContext();
 
-    const [showCard, setshowCard] = useState(false);
     const [locationString, setLocationString] = useState<string | null>("...");
+    const [heartAnimation, setHeartAnimation] = useState<boolean>(false);
     const [liked, setLiked] = useState<boolean>(dib.likes.includes(user?.uid || ""));
 
     async function heart() {
@@ -42,6 +43,10 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
             await updateDoc(dibRef, { likes: arrayRemove(user.uid) });
             await updateDoc(userRef, { likedDibs: arrayRemove(dib.dibId) });
         } else {
+
+            setHeartAnimation(true);
+            setTimeout(() => { setHeartAnimation(false); }, 500);
+
             await updateDoc(dibRef, { likes: arrayUnion(user.uid) });
             await updateDoc(userRef, { likedDibs: arrayUnion(dib.dibId) });
         }
@@ -60,9 +65,10 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
     async function getReadableLocation() {
         try {
             let locationGeo = await Location.reverseGeocodeAsync({ latitude: dib.location.latitude, longitude: dib.location.longitude });
-            console.log(locationGeo);
+            //console.log(locationGeo);
+            /* let si = getStateInitial(locationGeo[0].region); */
 
-            let locationString = `${locationGeo[0].country ?? ""}, ${locationGeo[0].region ?? ""}, ${locationGeo[0].district ?? ""}, ${locationGeo[0].streetNumber ?? ""}, ${locationGeo[0].street ?? ""}, ${locationGeo[0].postalCode ?? ""}`;
+            let locationString = `${locationGeo[0].district ?? ""} ${locationGeo[0].streetNumber ?? ""} ${locationGeo[0].street ?? ""} ${locationGeo[0].postalCode ?? ""}`;
             setLocationString(locationString);
         } catch (e) { }
 
@@ -71,34 +77,51 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
 
 
     var lastTap: number | null = null
-                    const handleDoubleTap = () => {
-                        const now = Date.now();
-                        const DOUBLE_PRESS_DELAY = 300;
-                        if (lastTap && (now - lastTap) < DOUBLE_PRESS_DELAY) {
-                            heart();
-                        } else {
-                            lastTap = now;
-                        }
-                    }
+    const handleDoubleTap = () => {
+        const now = Date.now();
+        const DOUBLE_PRESS_DELAY = 300;
+        if (lastTap && (now - lastTap) < DOUBLE_PRESS_DELAY) {
+            heart();
+        } else {
+            lastTap = now;
+        }
+    }
 
     return (
-        <View style={{ width: "95%", display: "flex", flexDirection: "column", alignItems: "center", backgroundColor: 'black', marginBottom: 8 }}>
-            <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width: "95%" }}>
-                <Text style={{ color: "white", fontFamily: 'Lato', fontSize: 14, }}>{locationString}</Text>
-                <Menu style={{ alignSelf: "flex-end" }}>
+        <View style={{ width: "95%", display: "flex", flexDirection: "column", alignItems: "center", backgroundColor: 'black', marginBottom: 16 }}>
+
+            {/* Card Header */}
+            <View style={{ display: "flex", flexDirection: "row", paddingHorizontal: 4, paddingBottom: 6, justifyContent: "space-between", width: "100%", }}>
+                <Text style={{ color: "white", fontFamily: 'Lato', fontSize: 14, flex: 1}}>{locationString}</Text>
+
+                <Menu style={{ alignSelf: "flex-start", marginLeft: 12 }} renderer={renderers.ContextMenu}
+                >
                     <MenuTrigger>
                         <Entypo name="dots-three-horizontal" size={24} color="white" />
                     </MenuTrigger>
                     <MenuOptions customStyles={optionsStyles} >
-                        <MenuOption value={1} onSelect={() => { onPress(); setshowCard(false) }} style={{ display: "flex", flexDirection: "row", gap: 20, alignItems: "center" }}>
+                        <MenuOption 
+                            value={1} onSelect={() => { onPress(); }} 
+                            style={{ display: "flex", flexDirection: "row", gap: 12, alignItems: "center" }}
+                        >
                             <Ionicons name="flag-outline" size={18} color="white" />
                             <Text style={{ color: "white" }}>Report Post</Text>
                         </MenuOption>
-                        <MenuOption value={2} onSelect={() => openDeviceMap()} style={{ display: "flex", flexDirection: "row", gap: 20, alignItems: "center" }}>
+                        <MenuOption 
+                            value={2} onSelect={() => openDeviceMap()} 
+                            style={{ display: "flex", flexDirection: "row", gap: 12, alignItems: "center" }}
+                        >
                             <Feather name="map" size={18} color="white" />
                             <Text style={{ color: "white" }}>Take me there</Text>
                         </MenuOption>
-
+                        <MenuOption
+                            value={3} 
+                            style={{position: "absolute", right: -4, top: 0 }}
+                        >
+                            <Entypo name="dots-three-horizontal" size={24} color="white" 
+                                style={{ position: "absolute", right: 0, top: -9 }}
+                            />
+                        </MenuOption>
                     </MenuOptions>
                 </Menu>
             </View>
@@ -123,11 +146,25 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
                             uri: dib.url,
                         }}
                     />
+
+                    <View
+                        style={{
+                            position: "absolute",
+                            zIndex: 10,
+                            bottom: 48,
+                            right: 26,
+                        }}
+                    >
+                        {
+                            heartAnimation ? <Image source={require("../assets/fasterheart.gif")} style={{ height: 50, width: 40 }} /> : null
+                        }
+                    </View>
+
                     <TouchableOpacity onPress={heart} style={{ position: "absolute", zIndex: 10, bottom: 24, right: 24 }}
                     >
                         {
                             liked ?
-                                <AntDesign name="heart" size={22} color="red" />
+                                <AntDesign name="heart" size={22} color="red" /> 
                                 :
                                 <AntDesign name="hearto" size={22} color="white" />
                         }
