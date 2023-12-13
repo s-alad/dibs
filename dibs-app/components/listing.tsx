@@ -94,12 +94,12 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
             <View style={{ display: "flex", flexDirection: "row", paddingHorizontal: 4, paddingBottom: 6, justifyContent: "space-between", width: "100%", }}>
                 <Text style={{ color: "white", fontFamily: 'Lato', fontSize: 14, flex: 1}}>{locationString}</Text>
 
-                <Menu style={{ alignSelf: "flex-start", marginLeft: 12 }} renderer={renderers.ContextMenu}
+                <Menu style={{ alignSelf: "flex-start", marginLeft: 12 }}
                 >
                     <MenuTrigger>
                         <Entypo name="dots-three-horizontal" size={24} color="white" />
                     </MenuTrigger>
-                    <MenuOptions customStyles={optionsStyles} >
+                    <MenuOptions customStyles={optionsStyles}>
                         <MenuOption 
                             value={1} onSelect={() => { onPress(); }} 
                             style={{ display: "flex", flexDirection: "row", gap: 12, alignItems: "center" }}
@@ -114,14 +114,14 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
                             <Feather name="map" size={18} color="white" />
                             <Text style={{ color: "white" }}>Take me there</Text>
                         </MenuOption>
-                        <MenuOption
+{/*                         <MenuOption
                             value={3} 
                             style={{position: "absolute", right: -4, top: 0 }}
                         >
                             <Entypo name="dots-three-horizontal" size={24} color="white" 
                                 style={{ position: "absolute", right: 0, top: -9 }}
                             />
-                        </MenuOption>
+                        </MenuOption> */}
                     </MenuOptions>
                 </Menu>
             </View>
@@ -147,17 +147,8 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
                         }}
                     />
 
-                    <View
-                        style={{
-                            position: "absolute",
-                            zIndex: 10,
-                            bottom: 48,
-                            right: 26,
-                        }}
-                    >
-                        {
-                            heartAnimation ? <Image source={require("../assets/fasterheart.gif")} style={{ height: 50, width: 40 }} /> : null
-                        }
+                    <View style={{position: "absolute", zIndex: 10, bottom: 48, right: 26, }}>
+                        {heartAnimation ? <Image source={require("../assets/fasterheart.gif")} style={{ height: 50, width: 40 }} /> : null}
                     </View>
 
                     <TouchableOpacity onPress={heart} style={{ position: "absolute", zIndex: 10, bottom: 24, right: 24 }}

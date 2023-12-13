@@ -14,6 +14,7 @@ export default function Loader({ text = "Loading", load = true }: LoaderProps ) 
 				justifyContent: "center",
 				flexDirection: "column",
 				gap: 20,
+				backgroundColor: "black",
 			}}
 		>
 			<Text style={{ color: "white"}}>{text}</Text>

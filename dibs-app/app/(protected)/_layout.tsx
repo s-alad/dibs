@@ -1,6 +1,6 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import { Platform, View, Text } from "react-native";
+import { Platform, View, Text, KeyboardAvoidingView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RegisteredStyle, ViewStyle } from "react-native";
 import { MenuProvider } from "react-native-popup-menu";
@@ -9,9 +9,7 @@ export default function ProtectedLayout() {
 
     const tabstyling: ViewStyle = {
         backgroundColor: "#000",
-        height: 64,
-        /* borderTopRightRadius: 35,
-        borderTopLeftRadius: 35, */
+
         ...Platform.select({
             ios: {
                 height: 80,
@@ -21,70 +19,76 @@ export default function ProtectedLayout() {
     }
 
     return (
-        <MenuProvider>
-            <SafeAreaView style={{
-                height: "100%",
-                width: "100%",
-                position: "absolute",
-                backgroundColor: "black"
-            }}>
-                <Tabs
-                    initialRouteName="home"
-                    screenOptions={{
-                        headerShown: false,
-                        tabBarStyle: {
-                            ...tabstyling,
-                            position: "absolute",
-                        },
-                        tabBarActiveTintColor: "#fff",
-                        tabBarShowLabel: false,
-                        tabBarHideOnKeyboard: true,
-                    }}
-                >
-                    <Tabs.Screen
-                        name="account"
-                        options={{
-                            title: "account",
+        <SafeAreaView style={{
+            height: "100%",
+            backgroundColor: "#000"
+        }}>
+            <KeyboardAvoidingView
+                style={{
+                    height: "100%",
+                    backgroundColor: "#000"
+                }}
+            >
+                <MenuProvider>
+                    <Tabs
+                        initialRouteName="home"
+                        screenOptions={{
                             headerShown: false,
-                            href: "/account",
-                            tabBarIcon: ({ color }) => (
-                                <TabBarIcon name="user" color={color} size={22} />
-                            ),
-                        }}
-                    />
-                    <Tabs.Screen
-                        name="home"
-                        options={{
-                            href: "/home",
-                            headerShown: false,
-                            title: "home",
                             tabBarStyle: {
                                 ...tabstyling,
                                 position: "absolute",
                             },
-                            tabBarIcon: ({ color }) => (
-                                <TabBarIcon name="home" color={color} size={22} />
-                            ),
+                            tabBarActiveTintColor: "#fff",
+                            tabBarShowLabel: false,
+                            tabBarHideOnKeyboard: true,
                         }}
-                    />
-                    <Tabs.Screen
-                        name="camera"
-                        options={{
-                            headerTitle: "camera",
-                            headerShown: false,
-                            href: "/camera",
-                            tabBarStyle: {
-                                ...tabstyling,
-                                position: "relative",
-                            },
-                            tabBarIcon: ({ color }) => (
-                                <TabBarIcon name="camera" color={color} size={22} />
-                            ),
-                        }}
-                    />
-                </Tabs>
-            </SafeAreaView>
-        </MenuProvider>
+
+                    >
+                        <Tabs.Screen
+                            name="account"
+                            options={{
+                                title: "account",
+                                headerShown: false,
+                                href: "/account",
+                                tabBarIcon: ({ color }) => (
+                                    <TabBarIcon name="user" color={color} size={22} />
+                                ),
+                            }}
+                        />
+                        <Tabs.Screen
+                            name="home"
+                            options={{
+                                href: "/home",
+                                headerShown: false,
+                                title: "home",
+                                tabBarStyle: {
+                                    ...tabstyling,
+                                    position: "absolute",
+                                },
+                                tabBarIcon: ({ color }) => (
+                                    <TabBarIcon name="home" color={color} size={22} />
+                                ),
+                            }}
+                        />
+                        <Tabs.Screen
+                            name="camera"
+                            options={{
+                                headerTitle: "camera",
+                                headerShown: false,
+                                href: "/camera",
+                                tabBarStyle: {
+                                    ...tabstyling,
+                                    position: "relative",
+                                },
+                                tabBarIcon: ({ color }) => (
+                                    <TabBarIcon name="camera" color={color} size={22} />
+                                ),
+                            }}
+                        />
+                    </Tabs>
+                </MenuProvider>
+            </KeyboardAvoidingView>
+        </SafeAreaView>
     )
 }
 function TabBarIcon(props: {

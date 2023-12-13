@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, Image, ActivityIndicator, TextInput } fro
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Camera, CameraCapturedPicture, CameraType, FlashMode } from 'expo-camera';
-import { Feather, Ionicons, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Feather, Ionicons, MaterialIcons, MaterialCommunityIcons, } from '@expo/vector-icons';
 import { useSegments, useRouter, usePathname, useFocusEffect } from "expo-router";
 
 import * as ImagePicker from 'expo-image-picker';
@@ -27,14 +27,19 @@ export default function Snap() {
 	const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
 	const [hasLocationPermission, setHasLocationPermission] = useState<boolean | null>(null);
 	const [location, setLocation] = useState<Location.LocationObject | null>(null);
-	const [locationString, setLocationString] = useState<string | null>(null);
+	const [locationString, setLocationString] = useState<string>("");
 	const [image, setImage] = useState<string | null>(null);
 	const [processing, setProcessing] = useState<boolean>(false);
+	const [step, setStep] = useState<number>(0);
+	const [readyToUpload, setReadyToUpload] = useState<boolean>(false);
+	const [uploading, setUploading] = useState<boolean>(false);
 	const [type, setType] = useState(CameraType.back);
 	const [flash, setFlash] = useState(FlashMode.off);
+
+
 	const cameraRef = useRef<Camera | null>(null);
 	const bottomSheetRef = useRef<BottomSheet>(null);
-	const snapPoints = useMemo(() => ["3%", '26%'], []);
+	const snapPoints = useMemo(() => ["3%", '35%'], []);
 
 	const storage = getStorage(app);
 	const db = getFirestore(app);
@@ -99,25 +104,24 @@ export default function Snap() {
 				setImage(result.assets[0].uri);
 			}
 		} catch (e) { console.log(e); }
-		
+
 	}
 
 	async function getLocation() {
 		let location = await Location.getCurrentPositionAsync({});
 		setLocation(location);
-		
+
 		let locationGeo = await Location.reverseGeocodeAsync({ latitude: location.coords.latitude, longitude: location.coords.longitude });
 		console.log(locationGeo);
-		
-		let locationString = `${locationGeo[0].country ?? ""}, ${locationGeo[0].region ?? ""}, ${locationGeo[0].district ?? ""}, ${locationGeo[0].streetNumber ?? ""}, ${locationGeo[0].street ?? ""}, ${locationGeo[0].postalCode ?? ""}`;
-		console.log(locationString);
-		
-		setLocationString(locationString);
+		let ld: Location.LocationGeocodedAddress = locationGeo[0];
+		let ls = `${ld.name ? ld.name + ", " : ""}${ld.street ? ld.street + ", " : ""}${ld.city ? ld.city + ", " : ""}${ld.postalCode ? ld.postalCode : ""}`
+		setLocationString(ls);
 	}
 
 	// upload the image, caption, and location to the dibs database
 	async function uploadDib() {
 		console.log("[UP] Attempt Uploading dib")
+		setUploading(true);
 
 		if (!user || !image || !location) { console.log('fail', location, image, user); return; }
 		try {
@@ -126,7 +130,6 @@ export default function Snap() {
 
 			// create a blob from the local image
 			const blob = await fetch(image).then(r => r.blob()).then(blob => { return blob });
-			console.log("BLOB", blob)
 
 			// Upload the file
 			const snapshot = await uploadBytes(storageRef, blob);
@@ -170,15 +173,93 @@ export default function Snap() {
 		} catch (error) {
 			console.error('Error:', error);
 		}
+
+		setUploading(false);
+		setReadyToUpload(false);
+		setStep(0);
 	}
 
 
-	if (hasCameraPermission === false) { return <View style={{ display: "flex", flex: 1, alignItems: "center", backgroundColor: '#000' }}><Loader text="No access to camera" load={false} /> </View>}
+	if (hasCameraPermission === false) { return <Loader text="No access to camera" load={false} /> }
 	if (hasCameraPermission === null) { return <Loader text="Requesting Camera Permissions" /> }
 	if (hasLocationPermission === false) { return <Loader text="No access to location" load={false} /> }
 	if (hasLocationPermission === null) { return <Loader text="Requesting Location Permissions" /> }
 
 	if (image) {
+
+		if (readyToUpload) {
+			return (
+				<View style={{ flex: 1, alignItems: "center", position: "relative", backgroundColor: "#000", paddingTop: "26%" }}>
+
+					{
+						uploading ?
+							<View style={{
+								position: "absolute", top: 0, left: 0,
+								height: "100%", width: "100%", zIndex: 99,
+								backgroundColor: "rgba(0,0,0,0.5)",
+								display: "flex", justifyContent: "center", alignItems: "center",
+							}}>
+								<ActivityIndicator size="large" color="#fff" />
+							</View>
+							: ''
+					}
+
+					<View style={{ position: "absolute", top: 30, left: 30, zIndex: 99, }} >
+						<TouchableOpacity onPress={() => { setReadyToUpload(false) }}>
+							<Ionicons name="arrow-back" size={34} color="white" />
+						</TouchableOpacity>
+					</View>
+
+					<Text
+						style={{
+							color: "#fff",
+							fontSize: 22,
+							maxWidth: "60%",
+							textAlign: "center",
+						}}
+					>
+						{locationString}
+					</Text>
+					<Image source={{ uri: image }} style={{ height: "65%", width: "80%", position: "relative", zIndex: -1, borderRadius: 20, marginVertical: 12 }} />
+					<Text
+						style={{
+							color: "#fff",
+							fontSize: 18,
+							maxWidth: "60%",
+							textAlign: "center",
+						}}
+					>
+						{description}
+					</Text>
+
+					<TouchableOpacity onPress={uploadDib}
+						style={{
+							position: "absolute",
+							bottom: 20,
+							width: "80%",
+							display: "flex",
+							alignItems: "center",
+						}}
+					>
+										<View
+											style={{
+												height: 40,
+												width: "100%",
+												backgroundColor: "#fff",
+												borderRadius: 34,
+												display: "flex",
+												justifyContent: "center",
+												alignItems: "center",
+											}}
+										>
+											<Text style={{ color: "#000", textAlign: "center" }}>Upload</Text>
+										</View>
+									</TouchableOpacity>
+
+				</View>
+			)
+		}
+
 		return (
 			<View style={{ flex: 1, alignItems: "center", justifyContent: "center", position: "relative" }}>
 				<Image source={{ uri: image }} style={{ height: "100%", width: "100%", position: "absolute", zIndex: -1 }} />
@@ -202,49 +283,128 @@ export default function Snap() {
 						index={1}
 						snapPoints={snapPoints}
 						backgroundComponent={({ style }) => (
-							<View style={[style, { backgroundColor: "#fff", borderRadius: 12, opacity: 1 }]} />
+							<View style={[style, { backgroundColor: "#000", borderRadius: 12, opacity: 1 }]} />
 						)}
-						style={{ width: '100%', paddingLeft: 24, paddingRight: 24, display: 'flex', justifyContent: 'center' }}
+						style={{ 
+							width: '100%', paddingHorizontal: 24, 
+							display: 'flex', justifyContent: 'center'
+						}}
+						handleIndicatorStyle={{ backgroundColor: "#fff", width: 60, height: 2, borderRadius: 2 }}
 					>
 
-						<View>
-							<Text style={{ color: "#000", textAlign: "left", marginBottom: 10 }}>{locationString}</Text>
-						</View>
+						{
+							step == 0 ?
+								<View
+									style={{
+										display: "flex",
+										justifyContent: 'space-between',
+										height: "100%",
+										paddingBottom: 24,
+										paddingTop: 12,
+									}}
+								>
+									<View>
+										<TextInput
+											multiline={true}
+											numberOfLines={1}
+											style={{
+												width: "100%",
+												backgroundColor: "#000",
+												color: "#fff",
+												borderRadius: 12,
+												padding: 10,
+												borderBottomColor: "#fff",
+												borderBottomWidth: 1,
+											}}
+											placeholder="Enter Location ... "
+											placeholderTextColor="grey"
+											onChangeText={
+												(text) => {
+													setLocationString(text);
+												}
+											}
+											value={locationString}
+											cursorColor={"#fff"}
+										/>
+										<Ionicons name="pencil" size={24} color="white" 
+											style={{ position: "absolute", top: 18, right: 16, zIndex: 99, fontSize: 16 }}
+										/>
+									</View>
 
-						<TextInput
-							multiline={true}
-							numberOfLines={2}
-							style={{
-								width: "100%",
-								backgroundColor: "#E5E5E5",
-								borderRadius: 12,
-								padding: 10,
-								marginBottom: 10,
-								borderColor: "#000",
-								borderWidth: 1,
-								textAlignVertical: "top",
-							}}
-							placeholder="Enter Caption"
-							placeholderTextColor="grey"
-							onChangeText={setDescription}
-							value={description}
-						/>
 
-						<TouchableOpacity onPress={uploadDib}>
-							<View
-								style={{
-									height: 40,
-									width: "100%",
-									backgroundColor: "#000",
-									borderRadius: 12,
-									display: "flex",
-									justifyContent: "center",
-									alignItems: "center",
-								}}
-							>
-									<Text style={{ color: "#fff", textAlign: "center" }}>Upload</Text>
-							</View>
-						</TouchableOpacity>
+									<TouchableOpacity onPress={() => setStep(1)}>
+										<View
+											style={{
+												height: 40,
+												width: "100%",
+												backgroundColor: "#fff",
+												borderRadius: 34,
+												display: "flex",
+												justifyContent: "center",
+												alignItems: "center",
+											}}
+										>
+											<Text style={{ color: "#000", textAlign: "center" }}>Continue</Text>
+										</View>
+									</TouchableOpacity>
+								</View>
+								: ""
+						}
+						{
+							step == 1 ?
+								<View
+									style={{
+										display: "flex",
+										justifyContent: 'space-between',
+										height: "100%",
+										paddingBottom: 24,
+									}}
+								>
+									<View>
+										<TouchableOpacity onPress={() => setStep(0)}>
+											<Ionicons name="arrow-back" size={24} color="white" />
+										</TouchableOpacity>
+
+										<TextInput
+											multiline={true}
+											numberOfLines={2}
+											style={{
+												width: "100%",
+												backgroundColor: "#000",
+												color: "#fff",
+												borderRadius: 12,
+												padding: 10,
+												marginBottom: 10,
+												textAlignVertical: "top",
+											}}
+											placeholder="Enter Caption ... "
+											placeholderTextColor="grey"
+											onChangeText={setDescription}
+											value={description}
+											cursorColor={"#fff"}
+										/>
+									</View>
+									<TouchableOpacity onPress={
+										() => setReadyToUpload(true)
+									}>
+										<View
+											style={{
+												height: 40,
+												width: "100%",
+												backgroundColor: "#fff",
+												borderRadius: 34,
+												display: "flex",
+												justifyContent: "center",
+												alignItems: "center",
+											}}
+										>
+											<Text style={{ color: "#000", textAlign: "center" }}>Continue</Text>
+										</View>
+									</TouchableOpacity>
+								</View>
+								: ""
+						}
+
 					</BottomSheet>
 				</View>
 			</View>
@@ -270,17 +430,17 @@ export default function Snap() {
 						ratio="16:9"
 					>
 
-{
-						!image && processing ? 
-						<View style={{
-							position: "absolute", top: 0, left: 0, 
-							height: "100%", width: "100%", zIndex: 4, 
-							backgroundColor: "rgba(0,0,0,0.5)",
-							display: "flex", justifyContent: "center", alignItems: "center",
-						}}>
-							<ActivityIndicator size="large" color="#fff" />
-						</View>
-						: ''}
+						{
+							!image && processing ?
+								<View style={{
+									position: "absolute", top: 0, left: 0,
+									height: "100%", width: "100%", zIndex: 4,
+									backgroundColor: "rgba(0,0,0,0.5)",
+									display: "flex", justifyContent: "center", alignItems: "center",
+								}}>
+									<ActivityIndicator size="large" color="#fff" />
+								</View>
+								: ''}
 
 						<View
 							style={{
@@ -313,7 +473,7 @@ export default function Snap() {
 								left: '26%',
 							}}
 						>
-							<MaterialCommunityIcons name="image-multiple-outline" size={24} color="white" 
+							<MaterialCommunityIcons name="image-multiple-outline" size={24} color="white"
 								onPress={() => {
 									getLocation();
 									pickImage();
