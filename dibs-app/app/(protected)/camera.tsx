@@ -173,7 +173,7 @@ export default function Snap() {
 	}
 
 
-	if (hasCameraPermission === false) { return <Loader text="No access to camera" load={false} /> }
+	if (hasCameraPermission === false) { return <View style={{ display: "flex", flex: 1, alignItems: "center", backgroundColor: '#000' }}><Loader text="No access to camera" load={false} /> </View>}
 	if (hasCameraPermission === null) { return <Loader text="Requesting Camera Permissions" /> }
 	if (hasLocationPermission === false) { return <Loader text="No access to location" load={false} /> }
 	if (hasLocationPermission === null) { return <Loader text="Requesting Location Permissions" /> }
@@ -252,7 +252,7 @@ export default function Snap() {
 	}
 
 	return (
-		<View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+		<View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: 'black' }}>
 			{
 				!showCamera ?
 					<Loader text="Loading Camera" />

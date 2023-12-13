@@ -69,10 +69,22 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
     }
     getReadableLocation();
 
+
+    var lastTap: number | null = null
+                    const handleDoubleTap = () => {
+                        const now = Date.now();
+                        const DOUBLE_PRESS_DELAY = 300;
+                        if (lastTap && (now - lastTap) < DOUBLE_PRESS_DELAY) {
+                            heart();
+                        } else {
+                            lastTap = now;
+                        }
+                    }
+
     return (
         <View style={{ width: "95%", display: "flex", flexDirection: "column", alignItems: "center", backgroundColor: 'black', marginBottom: 8 }}>
             <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width: "95%" }}>
-                <Text style={{ color: "white", fontFamily: 'Lato', fontSize: 14, }}>This is a header {locationString}</Text>
+                <Text style={{ color: "white", fontFamily: 'Lato', fontSize: 14, }}>{locationString}</Text>
                 <Menu style={{ alignSelf: "flex-end" }}>
                     <MenuTrigger>
                         <Entypo name="dots-three-horizontal" size={24} color="white" />
@@ -90,33 +102,39 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
                     </MenuOptions>
                 </Menu>
             </View>
-            <View style={{width: "100%", position: "relative"}}>
-                <Image
-                    style={{
-                        width: "100%",
-                        height: 340,
-                        /* aspectRatio: aspect, */
-                        borderTopLeftRadius: 20,
-                        borderTopRightRadius: 20,
-                        borderBottomLeftRadius: 20,
-                        borderBottomRightRadius: 20,
-                        resizeMode: "cover",
-                      
-                    }}
-                    source={{
-                        uri: dib.url,
-                    }}
-                />
-                <TouchableOpacity onPress={heart} style ={{position: "absolute", zIndex: 10, bottom: 24, right: 24}}>
-                    {
-                        liked ?
-                            <AntDesign name="heart" size={22} color="red" />
-                            :
-                            <AntDesign name="hearto" size={22} color="white" />
-                    }
-                </TouchableOpacity>
-            </View>
-            
+
+            <TouchableOpacity style={{ width: "100%", position: "relative" }}
+                onPress={() => { handleDoubleTap(); }}
+                activeOpacity={1}
+            >
+                <View style={{ width: "100%", position: "relative" }}>
+                    <Image
+                        style={{
+                            width: "100%",
+                            height: 340,
+                            /* aspectRatio: aspect, */
+                            borderTopLeftRadius: 20,
+                            borderTopRightRadius: 20,
+                            borderBottomLeftRadius: 20,
+                            borderBottomRightRadius: 20,
+                            resizeMode: "cover",
+                        }}
+                        source={{
+                            uri: dib.url,
+                        }}
+                    />
+                    <TouchableOpacity onPress={heart} style={{ position: "absolute", zIndex: 10, bottom: 24, right: 24 }}
+                    >
+                        {
+                            liked ?
+                                <AntDesign name="heart" size={22} color="red" />
+                                :
+                                <AntDesign name="hearto" size={22} color="white" />
+                        }
+                    </TouchableOpacity>
+                </View>
+            </TouchableOpacity>
+
             <View style={styles.textContainer}>
                 <View style={{
                     flex: 1,
