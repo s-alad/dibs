@@ -6,7 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from "expo-router";
 import { useAuthContext } from "../../context/authprovider";
 
-import { collection, doc, getDoc, getDocs, getFirestore, query, where } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query, where } from "firebase/firestore";
 import { app } from "../../services/firebase";
 
 import Loader from "../../components/loader";
@@ -19,6 +19,14 @@ import Dib from "../../models/dib";
 export default function Account() {
     const { userLogout, user } = useAuthContext();
     const db = getFirestore(app);
+
+    async function delUser() {
+        if (!user) { return }
+
+        const userRef = doc(db, 'users', user.uid);
+        await userLogout();
+        await deleteDoc(userRef);
+    }
 
     let [fetchingLikedDibs, setFetchingLikedDibs] = useState<boolean>(true);
     let [likedDibs, setLikedDibs] = useState<Dib[]>([]);
@@ -111,7 +119,7 @@ export default function Account() {
                                 <Ionicons name="trash" size={50} color="white" style={{marginTop:40}}/>
                                 <Text style={{color:"white", fontSize: 20, textAlign:"center", margin:30,marginHorizontal:60, fontWeight:"bold"}}>are you sure you would like to delete your account?</Text>
                                 <TouchableOpacity
-                                    onPress={userLogout}
+                                    onPress={delUser}
                                 >
                                     <Text style={{color: "white", marginTop: 45}}>yes, delete my account</Text>
                                 </TouchableOpacity>
