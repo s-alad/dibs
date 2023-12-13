@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useFocusEffect, useRouter } from "expo-router";
 import { BottomSheetModal, BottomSheetModalProvider, BottomSheetBackdrop, BottomSheetBackdropProps } from '@gorhom/bottom-sheet';
 import { AntDesign, Ionicons, Feather } from '@expo/vector-icons';
-import { getFirestore, collection, getDocs, DocumentData } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, DocumentData, query, orderBy, where } from 'firebase/firestore';
 import { app } from "../../services/firebase";
 
 import Listing from "../../components/listing";
@@ -19,12 +19,17 @@ export default function Home() {
     let [dibs, setDibs] = useState<Dib[]>([]);
     async function getDibs() {
         const dibsCollection = collection(db, 'dibs');
-        const dibsSnapshot = await getDocs(dibsCollection);
+        const dibsQuery = query(dibsCollection, 
+            orderBy('timestamp', 'desc'))
+        const dibsSnapshot = await getDocs(dibsQuery);
 
         let ndibs: Dib[] = [];
         dibsSnapshot.forEach((doc) => {
             const id = doc.id;
             const data: DocumentData = doc.data();
+
+            if (data.reports.length > 4) { return; }
+
             ndibs.push(new Dib(data, id));
         });
         console.log("[FETCH DIBS] Found " + ndibs.length + " dibs");

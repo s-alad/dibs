@@ -51,7 +51,7 @@ function useProtectedRoute(user: TUser | null, startedAuthentication: TAuthentic
             if (pathname !== "/login") { router.replace("/login"); }
         }
         else if (!user && !inAuthGroup ) {
-            if (pathname !== "/welcome") { router.replace("/welcome"); } // Redirect to the welcome page.
+            if (pathname !== "/login") { router.replace("/login"); } // Redirect to the welcome page.
         } else if (user && inAuthGroup) { // Redirect away from the sign-in page.
             if (startedAuthentication === "onboarding") {
                 router.replace("/onboard")

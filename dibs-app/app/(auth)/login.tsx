@@ -50,11 +50,12 @@ export default function Login() {
                 >
                     {
                         authenticationStatus === "failed" ? "Please enter a valid Boston University email address. " : (
-                            authenticationStatus === "started" ? <ActivityIndicator size="small" color="#000" /> : (
-                                authenticationStatus === "authenticated" ? <ActivityIndicator size="small" color="#0000ff" /> : ""
+                            authenticationStatus === "started" ? <ActivityIndicator size="small" color="#fff" /> : (
+                                authenticationStatus === "authenticated" ? <ActivityIndicator size="small" color="#fff" /> : ""
                             )
                         )
                     }
+                    {}
                 </Text>
                 <Text style={{textAlign:"center", marginHorizontal: 30, marginTop: 50, color:"white"}}>
                 This version is currently only available to <Text style={{fontWeight:"bold"}}>Boston University</Text> students.  

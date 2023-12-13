@@ -71,7 +71,7 @@ export default function Account() {
         const randomColor = Math.floor(Math.random() * 16777215)
             .toString(16)
             .padStart(6, '0');
-        return `#${randomColor}`;
+        return `#FC4F42`;
     };
 
     const [modalVisible, setModalVisible] = useState(false);
@@ -110,7 +110,9 @@ export default function Account() {
                             <View style={{ alignItems:"center"}}>
                                 <Ionicons name="trash" size={50} color="white" style={{marginTop:40}}/>
                                 <Text style={{color:"white", fontSize: 20, textAlign:"center", margin:30,marginHorizontal:60, fontWeight:"bold"}}>are you sure you would like to delete your account?</Text>
-                                <TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={userLogout}
+                                >
                                     <Text style={{color: "white", marginTop: 45}}>yes, delete my account</Text>
                                 </TouchableOpacity>
                             </View>
