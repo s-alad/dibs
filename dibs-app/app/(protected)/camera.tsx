@@ -230,21 +230,21 @@ export default function Snap() {
 							value={description}
 						/>
 
-						<View
-							style={{
-								height: 40,
-								width: "100%",
-								backgroundColor: "#000",
-								borderRadius: 12,
-								display: "flex",
-								justifyContent: "center",
-								alignItems: "center",
-							}}
-						>
-							<TouchableOpacity onPress={uploadDib}>
-								<Text style={{ color: "#fff", textAlign: "center" }}>Upload</Text>
-							</TouchableOpacity>
-						</View>
+						<TouchableOpacity onPress={uploadDib}>
+							<View
+								style={{
+									height: 40,
+									width: "100%",
+									backgroundColor: "#000",
+									borderRadius: 12,
+									display: "flex",
+									justifyContent: "center",
+									alignItems: "center",
+								}}
+							>
+									<Text style={{ color: "#fff", textAlign: "center" }}>Upload</Text>
+							</View>
+						</TouchableOpacity>
 					</BottomSheet>
 				</View>
 			</View>
