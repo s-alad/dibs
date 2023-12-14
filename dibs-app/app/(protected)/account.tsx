@@ -99,7 +99,7 @@ export default function Account() {
                     </TouchableOpacity>
                 </View>
                 <Modal
-                   animationType="fade"
+                    animationType="fade"
                     transparent={true}
                     visible={modalVisible}
                     onRequestClose={() => {

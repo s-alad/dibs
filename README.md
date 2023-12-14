@@ -1,5 +1,13 @@
 # dibs
 
+## Information
+
+dibs is a digital flea market for your unused items. It was developed as a project part of BU Spark!'s' innovation lab.  
+
+### code
+dibs is written in TS & built on EXPO, React Native, & Firebase.  
+*the code is very developmental and is insecure & very messy. all validation is currently done on the client & various bugs exist. This codebase has much to improve on.*
+
 ## Development Guide
 
 ### Expo
