@@ -16,6 +16,7 @@ export default class Dib {
         latitude: number,
         longitude: number,
     }
+    readonly locationstring?: string;
 
     constructor(raw: DocumentData, dibId: string) {
         this.dibId = dibId;

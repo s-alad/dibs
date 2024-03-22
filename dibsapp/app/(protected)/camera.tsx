@@ -91,7 +91,8 @@ export default function Snap() {
                 location: {
                     latitude: location?.coords.latitude,
                     longitude: location?.coords.longitude
-                }
+                },
+                locationstring: locationstring,
             }
             const dibDocRef = await addDoc(dibsCollection, newDib);
             console.log("Document written with ID: ", dibDocRef.id);

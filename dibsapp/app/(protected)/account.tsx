@@ -11,7 +11,7 @@ import { app } from "../../services/firebase";
 
 
 import Listing from "../../components/listing";
-/* import Report from "../../components/report"; */
+import Report from "../../components/report";
 import Dib from "../../models/dib";
 import Loader from "../../components/loader";
 
@@ -162,10 +162,9 @@ export default function Account() {
                             }}
                             backdropComponent={renderBackdrop}
                         >
-                            <Text>rep</Text>
-                            {/* <Report
+                            <Report
                                 dib={reportingDib}
-                            /> */}
+                            />
                         </BottomSheetModal>
                     </>
                 } 
