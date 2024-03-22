@@ -8,7 +8,7 @@ import { useAuthContext } from "../../context/authprovider";
 
 import { collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query, where } from "firebase/firestore";
 import { app } from "../../services/firebase";
-
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import Listing from "../../components/listing";
 import Report from "../../components/report";
@@ -92,7 +92,12 @@ export default function Account() {
                         <Ionicons name="exit-outline" size={24} color="white" />
                     </TouchableOpacity>
 
-                    <View style={{ width: 120, height: 120, borderRadius: 120 / 2, backgroundColor: generateColor() }} />
+                    <View style={{ width: 120, height: 120, borderRadius: 120 / 2, backgroundColor: generateColor(),
+                        display: "flex", justifyContent: "center", alignItems: "center", 
+                }}>
+                        <MaterialCommunityIcons name="cow" size={24} color="black" style={{color: "white", fontSize: 62}} />
+                    </View>
+
                     <Text style={{ fontSize: 25, marginBottom: 70, color: "white", marginTop: 15 }}>{user?.anonymousName}</Text>
                     <TouchableOpacity onPress={() => setModalVisible(!modalVisible)} style={{ alignSelf: "flex-end", top: 0, position: 'absolute', zIndex: 9 }}>
                         <Ionicons name="trash" size={24} color="white" />

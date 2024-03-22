@@ -1,6 +1,7 @@
 import Dib from "../models/dib";
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Button, TouchableOpacity, BackHandler, Image, TouchableWithoutFeedback, Pressable } from "react-native";
+import { View, Text, StyleSheet, Button, TouchableOpacity, BackHandler, TouchableWithoutFeedback, Pressable } from "react-native";
+import {Image} from "expo-image"
 import { AntDesign, Ionicons, Feather, Entypo } from '@expo/vector-icons';
 import {
     Menu,
@@ -16,6 +17,8 @@ import * as Linking from 'expo-linking';
 import * as Location from 'expo-location';
 
 import { useAuthContext } from "../context/authprovider";
+
+import HeartAnimation from "../assets/fasterheart.gif";
 
 interface IListing {
     dib: Dib;
@@ -50,14 +53,14 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
         }
     }
 
-    let [aspect, setAspect] = useState(.5635);
+/*     let [aspect, setAspect] = useState(.5635);
     Image.getSize(dib.url, (width, height) => {
         setAspect(width / height);
         console.log("ASPECT", width / height);
     }, (error) => { 
         setAspect(4/3);
         console.log("ASPECT", error);
-    });
+    }); */
 
     async function openDeviceMap() {
         const mapurl = `geo:0,0?q=${dib.location.latitude},${dib.location.longitude}`;
@@ -168,7 +171,7 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
                     />
 
                     <View style={{ position: "absolute", zIndex: 10, bottom: 48, right: 26, }}>
-                        {/* {heartAnimation ? <Image source={require("../assets/fasterheart.gif")} style={{ height: 50, width: 40 }} /> : null} */}
+                        {heartAnimation ? <Image source={HeartAnimation} style={{ height: 50, width: 40 }} /> : null}
                     </View>
 
                     <TouchableOpacity onPress={heart} style={{ position: "absolute", zIndex: 10, bottom: 24, right: 24 }}

@@ -268,7 +268,7 @@ export default function Snap() {
                 </TouchableOpacity>
 
                 {/* circle */}
-                <TouchableOpacity style={{ position: "absolute", bottom: "20%", zIndex: 10 }}
+                <TouchableOpacity style={{ position: "absolute", bottom: "16%", zIndex: 10 }}
                     onPress={
                         async () => {
                             const file = await cameraRef!.current!.takePhoto(

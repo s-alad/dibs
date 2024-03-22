@@ -56,7 +56,7 @@ function useProtectedRoute(user: TUser | null, startedAuthentication: TAuthentic
                 router.replace("/onboard")
             }
             else {
-                router.replace("/account")
+                router.replace("/")
             }; 
         }
     }, [user, segments, startedAuthentication]);
