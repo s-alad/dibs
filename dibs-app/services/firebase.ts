@@ -1,11 +1,8 @@
-import Constants from 'expo-constants';
-
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
 import { initializeAuth  } from "firebase/auth";
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
-
 
 const firebaseConfig = {
     apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,

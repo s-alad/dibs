@@ -1,7 +1,7 @@
 import Dib from "../models/dib";
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Button, TouchableOpacity, BackHandler, Image, TouchableWithoutFeedback, Pressable } from "react-native";
-import { AntDesign, Ionicons, Feather } from '@expo/vector-icons';
+import { AntDesign, Ionicons, Feather, Entypo } from '@expo/vector-icons';
 import {
     Menu,
     MenuOptions,
@@ -9,7 +9,6 @@ import {
     MenuTrigger,
     renderers
 } from "react-native-popup-menu";
-import { Entypo } from "@expo/vector-icons";
 import { getFirestore, doc, updateDoc, arrayUnion, getDoc, arrayRemove } from 'firebase/firestore';
 import { app } from "../services/firebase";
 
@@ -17,7 +16,6 @@ import * as Linking from 'expo-linking';
 import * as Location from 'expo-location';
 
 import { useAuthContext } from "../context/authprovider";
-import { convertToRGBA } from "react-native-reanimated";
 
 interface IListing {
     dib: Dib;
@@ -148,7 +146,7 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
                     />
 
                     <View style={{position: "absolute", zIndex: 10, bottom: 48, right: 26, }}>
-                        {heartAnimation ? <Image source={require("../assets/fasterheart.gif")} style={{ height: 50, width: 40 }} /> : null}
+                        {/* {heartAnimation ? <Image source={require("../assets/fasterheart.gif")} style={{ height: 50, width: 40 }} /> : null} */}
                     </View>
 
                     <TouchableOpacity onPress={heart} style={{ position: "absolute", zIndex: 10, bottom: 24, right: 24 }}

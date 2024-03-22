@@ -64,7 +64,7 @@ export default function Report({ dib }: IReport) {
         }
 
         {clicked && <>
-            <Image style={styles.check} source={require('dibs-app/assets/check.png')} />
+            {/* <Image style={styles.check} source={require('dibs-app/assets/check.png')} /> */}
             <Text style={styles.textFinal}>Thanks for letting us know!</Text>
             <Text style={styles.smallfinal}>Your feedback is important in helping us keep the Dibs! community safe.</Text>
         </>}

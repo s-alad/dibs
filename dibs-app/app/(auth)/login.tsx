@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator } from "react-native";
+import React from "react";
+import { Text, View, TouchableOpacity, Image, ActivityIndicator } from "react-native";
 import { useAuthContext } from "../../context/authprovider";
 
 import * as WebBrowser from "expo-web-browser";
-WebBrowser.maybeCompleteAuthSession();
 
 export default function Login() {
     const { user, userLogin, authenticationStatus } = useAuthContext();
@@ -13,7 +12,7 @@ export default function Login() {
             <View style={{ height: "25%" }}></View>
 
             <View style={{ width: "80%", alignItems: "center" }}>
-                <Image source={require("../../assets/bigLogo.png")} style={{ width: 500, height: "50%", alignSelf: "center" }} />
+                {/* <Image source={require("../../assets/bigLogo.png")} style={{ width: 500, height: "50%", alignSelf: "center" }} /> */}
                 <TouchableOpacity onPress={() => { userLogin() }}>
                     <View
                         style={{
@@ -27,10 +26,10 @@ export default function Login() {
                             borderWidth: 2,
                         }}
                     >
-                        <Image
+                        {/* <Image
                             source={require('../../assets/google.png')}
                             style={{ width: 26, height: 26,}}
-                        />
+                        /> */}
                     </View>
                 </TouchableOpacity>
                 <Text

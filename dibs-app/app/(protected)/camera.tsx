@@ -17,8 +17,7 @@ import { db, auth, app } from "../../services/firebase";
 import Loader from "../../components/loader";
 import { useAuthContext } from "../../context/authprovider";
 
-import { Buffer } from "buffer";
-import Dib from "models/dib";
+import Dib from "../../models/dib";
 
 
 export default function Snap() {

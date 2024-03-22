@@ -32,7 +32,7 @@ export default function Onboard() {
                 <>
                     <Text style={{ color: "white", fontSize: 25, fontFamily: "lato", textAlign: "center", fontWeight: "bold", marginHorizontal: 50 }}>easily upload your
                         unwanted items </Text>
-                    <Image source={require("../../assets/cameraScreen.png")} />
+                    {/* <Image source={require("../../assets/cameraScreen.png")} /> */}
                     <View style={{ flexDirection: "row", gap: 6, position: "absolute", left: 40, bottom: 40 }}>
                         <View style={{ width: 12, height: 12, backgroundColor: "black", borderRadius: 12 / 2, borderColor: "white", borderWidth: 2 }} />
                         <View style={{ width: 12, height: 12, backgroundColor: "white", borderRadius: 12 / 2, }} />
@@ -47,7 +47,7 @@ export default function Onboard() {
         else {
             return (
                 <>
-                    <Image source={require("../../assets/feedScreen.png")} />
+                    {/* <Image source={require("../../assets/feedScreen.png")} /> */}
                     <Text style={{ color: "white", fontSize: 25, fontFamily: "lato", textAlign: "center", fontWeight: "bold", marginHorizontal: 50 }}>browse free
                         items near you</Text>
                     <View style={{ flexDirection: "row", gap: 6, position: "absolute", left: 40, bottom: 40 }}>

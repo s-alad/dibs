@@ -10,7 +10,7 @@ export default function Login() {
         <View style={{ display: "flex", flex: 1, alignItems: "center", backgroundColor: '#fff' }}>
 
             <View style={{backgroundColor: "#EFEFEF", height:"40%", width: "100%", borderBottomLeftRadius: 100, borderBottomRightRadius: 100}}>
-                <Image source={require("../../assets/world.png")} style={{
+                {/* <Image source={require("../../assets/world.png")} style={{
                     width: 240,
                     height: 240,
                     resizeMode: 'contain',
@@ -18,7 +18,7 @@ export default function Login() {
                     marginTop: 100,
                     borderColor: 'red',
 
-                }}/>
+                }}/> */}
             </View>
 
             <View style={{ flex: 1, paddingTop: 56, width: "80%", alignItems: "center"}}>
