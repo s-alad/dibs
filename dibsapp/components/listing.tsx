@@ -82,8 +82,7 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
                 console.log('Permission to access location was denied');
                 return;
             }
-
-            let location = await Location.getCurrentPositionAsync({});
+            
             getReadableLocation();
 
         })();
