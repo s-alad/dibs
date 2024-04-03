@@ -1,6 +1,6 @@
 import Dib from "../models/dib";
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Button, TouchableOpacity, BackHandler, TouchableWithoutFeedback, Pressable } from "react-native";
+import { View, Text, StyleSheet, Button, TouchableOpacity, BackHandler, TouchableWithoutFeedback, Pressable, Platform } from "react-native";
 import {Image} from "expo-image"
 import { AntDesign, Ionicons, Feather, Entypo } from '@expo/vector-icons';
 import {
@@ -63,8 +63,15 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
     }); */
 
     async function openDeviceMap() {
-        const mapurl = `geo:0,0?q=${dib.location.latitude},${dib.location.longitude}`;
-        Linking.openURL(mapurl);
+        if (Platform.OS === 'ios') {
+            const mapurl = `maps:0,0?q=${dib.location.latitude},${dib.location.longitude}`;
+            Linking.openURL(mapurl);
+
+        } else {
+            const mapurl = `geo:0,0?q=${dib.location.latitude},${dib.location.longitude}`;
+            Linking.openURL(mapurl);
+        }
+        
     }
 
     useEffect(() => {

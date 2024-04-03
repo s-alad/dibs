@@ -134,11 +134,11 @@ export function AuthProvider({ children }: { children: JSX.Element }): JSX.Eleme
 
                 if (resuser && resuser.email) {
 
-                    if (resuser.email.split("@")[1] !== "bu.edu") {
+/*                     if (resuser.email.split("@")[1] !== "bu.edu") {
                         console.log("NOT A BU EMAIL")
                         setAuthenticationStatus("failed");
                         return;
-                    }
+                    } */
 
                     let nuser: TUser = {
                         uid: resuser.uid,
