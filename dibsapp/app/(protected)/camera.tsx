@@ -41,9 +41,9 @@ export default function Snap() {
             setLocation(location);
             console.log('location', location);
             const locationString = await Location.reverseGeocodeAsync({ latitude: location.coords.latitude, longitude: location.coords.longitude });
-            console.log('locationString', locationString);
+            let tolocationString = `${locationString[0].district ?? ""} ${locationString[0].streetNumber ?? ""} ${locationString[0].street ?? ""} ${locationString[0].postalCode ?? ""}`;
             setLocationString(
-                locationString[0].formattedAddress || "Unknown Location"
+                tolocationString || "Unknown Location"
             );
         } catch (e) {
             console.error('Error:', e);
@@ -58,16 +58,15 @@ export default function Snap() {
         console.log('uploading dib', uploading);
         if (uploading) { return; }
         setuploading(true);
-
+        console.log("new uploading", uploading);
+        console.log("location", location)
         if (!user || !image || !location) { console.log('fail', location, image, user); return; }
         try {
             // Create a reference to the storage bucket
             const storageRef = ref(storage, "dibs/" + user.uid + "/" + Date.now() + ".jpg");
-
             // create a blob from the local image
             const blob = await fetch('file://' + image.file.path).then(r => r.blob()).then(blob => { return blob });
             /* const blob = image.blob; */
-
             // Upload the file
             const snapshot = await uploadBytes(storageRef, blob);
             console.log('Uploaded a blob or file!');
@@ -171,6 +170,13 @@ export default function Snap() {
     }
 
     if (image) {
+        while(location == null){
+            return(
+                <View style={{ display: "flex", flex: 1, alignItems: "center", backgroundColor: '#000' }}>
+                <Loader text="Processing Image..." load={true} />
+                </View>
+            );
+        }
         return (
             <View 
                 style={animatedStyle}
