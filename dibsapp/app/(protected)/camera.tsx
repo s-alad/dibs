@@ -37,7 +37,9 @@ export default function Snap() {
     async function getLocation() {
         //reverse geocode the location
         try {
-            const location = await Location.getCurrentPositionAsync({});
+            const location = await Location.getCurrentPositionAsync({
+                accuracy: Location.Accuracy.Low 
+            });
             setLocation(location);
             console.log('location', location);
             const locationString = await Location.reverseGeocodeAsync({ latitude: location.coords.latitude, longitude: location.coords.longitude });
