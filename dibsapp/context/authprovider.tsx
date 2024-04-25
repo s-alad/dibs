@@ -5,7 +5,7 @@ import { auth, db, app} from "../services/firebase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GoogleAuthProvider, onAuthStateChanged, signInWithCredential, signOut} from "firebase/auth";
 import { collection, addDoc, getDoc, query, where, doc, setDoc } from 'firebase/firestore';
-
+import { signInWithEmailAndPassword } from "firebase/auth";
 import * as Google from "expo-auth-session/providers/google";
 import * as WebBrowser from "expo-web-browser";
 import getRandomName from "../util/anonymous";
@@ -22,6 +22,7 @@ export type AuthType = {
     user: TUser | null;
     authenticationStatus?: TAuthenticationStatus;
     userLogin: () => void;
+    userLoginEmailPassword: (email: string, password: string) => void;
     userLogout: () => void;
     userOnboard: () => void;
 }
@@ -32,6 +33,7 @@ const AuthContext = createContext<AuthType>({
     user: null,
     authenticationStatus: "initial",
     userLogin: () => { },
+    userLoginEmailPassword: () => { },
     userLogout: () => { },
     userOnboard: () => { },
 });
@@ -178,6 +180,34 @@ export function AuthProvider({ children }: { children: JSX.Element }): JSX.Eleme
         }).catch((err) => { console.log(err) })
     }
 
+    async function userLoginEmailPassword(email: string, password: string) {
+        console.log("[UL] - LOGIN EMAIL PASSWORD")
+        setAuthenticationStatus("started");
+        signInWithEmailAndPassword(auth, email, password).then((res) => {
+            let resuser = res.user;
+            if (resuser && resuser.email) {
+                let nuser: TUser = {
+                    uid: resuser.uid,
+                    displayName: resuser.displayName || "",
+                    anonymousName: "Anonymous " + getRandomName(),
+                    email: resuser.email,
+                    raw: JSON.stringify(resuser),
+                }
+
+                AsyncStorage.setItem("@user", JSON.stringify(nuser)).then(async () => {
+                    console.log("SET USER")
+                    setUser(nuser);
+                    await addUserToFirestore(nuser);
+                    WebBrowser.dismissBrowser();
+                }).catch((err) => {
+                    console.log(err)
+                })
+            }
+        }).catch((err) => {
+            console.log(err)
+        })
+    }
+
     async function userLogout() {
         console.log("[UL] - LOGOUT")
         await signOut(auth);
@@ -197,6 +227,7 @@ export function AuthProvider({ children }: { children: JSX.Element }): JSX.Eleme
     const authContext: AuthType = {
         user,
         userLogin,
+        userLoginEmailPassword,
         userLogout,
         userOnboard,
         authenticationStatus,
