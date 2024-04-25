@@ -75,6 +75,7 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
     }
 
     useEffect(() => {
+        getStaticLocation();
         (async () => {
 
             let { status } = await Location.requestForegroundPermissionsAsync();
@@ -88,9 +89,20 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
         })();
     }, []);
 
+    function getStaticLocation() {
+        /* console.log("GETTING STATIC LOCATION");
+        console.log(dib); */
+        if (dib.locationstring) {
+            //console.log("Location string exists");
+            setLocationString(dib.locationstring);
+            return;
+        }
+    }
+
     async function getReadableLocation() {
 
         if (dib.locationstring) {
+            console.log("Location string exists");
             setLocationString(dib.locationstring);
             return;
         }
@@ -128,7 +140,11 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
                     <MenuTrigger>
                         <Entypo name="dots-three-horizontal" size={24} color="white" />
                     </MenuTrigger>
-                    <MenuOptions customStyles={optionsStyles}>
+                    <MenuOptions customStyles={optionsStyles}
+                        optionsContainerStyle={{
+                            position: "relative",
+                        }}
+                    >
                         <MenuOption
                             value={1} onSelect={() => { onPress(); }}
                             style={{ display: "flex", flexDirection: "row", gap: 12, alignItems: "center" }}
@@ -143,14 +159,14 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
                             <Feather name="map" size={18} color="white" />
                             <Text style={{ color: "white" }}>Take me there</Text>
                         </MenuOption>
-                        <MenuOption
+                        {/* <MenuOption
                             value={3}
                             style={{ position: "absolute", right: -4, top: 0 }}
                         >
                             <Entypo name="dots-three-horizontal" size={24} color="white"
                                 style={{ position: "absolute", right: 0, top: -9 }}
                             />
-                        </MenuOption>
+                        </MenuOption> */}
                     </MenuOptions>
                 </Menu>
             </View>

@@ -27,11 +27,16 @@ export default function Home() {
             const id = doc.id;
             const data: DocumentData = doc.data();
 
-            if (data.reports.length > 4) { return; }
+            if (data.reports.length > 2) { return; }
 
-            ndibs.push(new Dib(data, id));
+            let newdib = new Dib(data, id);
+
+            //console.log("[FETCH DIBS] Dib - ", newdib);
+
+            ndibs.push(newdib);
         });
         console.log("[FETCH DIBS] Found " + ndibs.length + " dibs");
+        console.log("[FETCH DIBS] ------------------------------------ \n"); console.log();
         setDibs(ndibs);
     }
 

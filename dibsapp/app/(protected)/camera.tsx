@@ -192,7 +192,7 @@ export default function Snap() {
                 }
 
                 <ScrollView
-                    contentContainerStyle={{ flexGrow: 1, alignItems: "center", backgroundColor: 'black', }}
+                    contentContainerStyle={{ flexGrow: 1, alignItems: "center", backgroundColor: 'black', paddingBottom: 200}}
                     style={{ display: "flex", flexDirection: "column", backgroundColor: 'black', height: "100%", width: "100%" }}>
 
 
@@ -207,6 +207,9 @@ export default function Snap() {
                             value={locationstring}
                             onChangeText={text => { setLocationString(text); }}
                         />
+
+                        <Feather name="edit-2" size={24} color="white" />
+                        
                     </View>
 
                     <View
@@ -229,7 +232,6 @@ export default function Snap() {
 
                     <View style={{ width: "80%", display: "flex", flexDirection: "row", alignItems: "center", zIndex: 9, height: 130 }}>
                         <TextInput
-                            multiline
                             style={{ color: "white", padding: 10, borderRadius: 10, width: "100%", textAlign: "center", fontSize: 16, }}
                             placeholder="add a caption ..."
                             placeholderTextColor={"grey"}
