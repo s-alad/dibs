@@ -101,11 +101,11 @@ export default function Listing({ onPress, dib }: IListing): JSX.Element {
 
     async function getReadableLocation() {
 
-        if (dib.locationstring) {
+        /* if (dib.locationstring) {
             console.log("Location string exists");
             setLocationString(dib.locationstring);
             return;
-        }
+        } */
 
         try {
             let locationGeo = await Location.reverseGeocodeAsync({ latitude: dib.location.latitude, longitude: dib.location.longitude });
