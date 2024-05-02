@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useState, useRef } from "react";
 
 import { auth, db, app} from "../services/firebase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { GoogleAuthProvider, onAuthStateChanged, signInWithCredential, signOut} from "firebase/auth";
+import { GoogleAuthProvider, createUserWithEmailAndPassword, onAuthStateChanged, signInWithCredential, signOut} from "firebase/auth";
 import { collection, addDoc, getDoc, query, where, doc, setDoc } from 'firebase/firestore';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import * as Google from "expo-auth-session/providers/google";
@@ -23,17 +23,19 @@ export type AuthType = {
     authenticationStatus?: TAuthenticationStatus;
     userLogin: () => void;
     userLoginEmailPassword: (email: string, password: string) => void;
+    userSignupEmailPassword: (email: string, password: string) => void;
     userLogout: () => void;
     userOnboard: () => void;
 }
 
-type TAuthenticationStatus = "initial" | "started" | "authenticated" | "failed" | "error" | "onboarding";
+type TAuthenticationStatus = "initial" | "started" | "authenticated" | "failed" | "error" | "onboarding" | string;
 
 const AuthContext = createContext<AuthType>({
     user: null,
     authenticationStatus: "initial",
     userLogin: () => { },
     userLoginEmailPassword: () => { },
+    userSignupEmailPassword: () => { },
     userLogout: () => { },
     userOnboard: () => { },
 });
@@ -205,7 +207,38 @@ export function AuthProvider({ children }: { children: JSX.Element }): JSX.Eleme
             }
         }).catch((err) => {
             console.log(err)
+            setAuthenticationStatus(err.toString());
         })
+    }
+
+    async function userSignupEmailPassword(email: string, password: string) {
+        console.log("[US] - SIGN UP EMAIL PASSWORD");
+        setAuthenticationStatus("started");
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((res) => {
+                let resUser = res.user;
+                let newUser: TUser = {
+                    uid: resUser.uid,
+                    displayName: resUser.displayName || "",
+                    anonymousName: "Anonymous " + getRandomName(),
+                    email: resUser.email!,
+                    raw: JSON.stringify(resUser),
+                };
+    
+                // Store user in AsyncStorage and Firestore
+                AsyncStorage.setItem("@user", JSON.stringify(newUser)).then(async () => {
+                    console.log("NEW USER SIGNED UP AND STORED");
+                    setUser(newUser);
+                    await addUserToFirestore(newUser);
+                    WebBrowser.dismissBrowser();
+                }).catch((err) => {
+                    console.log(err);
+                });
+            })
+            .catch((err) => {
+                console.log(err);
+                setAuthenticationStatus(err.toString());
+            });
     }
 
     async function userLogout() {
@@ -228,6 +261,7 @@ export function AuthProvider({ children }: { children: JSX.Element }): JSX.Eleme
         user,
         userLogin,
         userLoginEmailPassword,
+        userSignupEmailPassword,
         userLogout,
         userOnboard,
         authenticationStatus,

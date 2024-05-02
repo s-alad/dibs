@@ -40,21 +40,21 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow Dibs to use your location."
+          "locationAlwaysAndWhenInUsePermission": "Allow Dibs to use your location. This is needed to show you recent throw-away dibs & items near you!"
         }
       ],
       [
         "expo-camera",
         {
-          "cameraPermission": "Allow Dibs to access your camera",
-          "microphonePermission": "Allow Dibs to access your microphone",
+          "cameraPermission": "Allow Dibs to access your camera. This is needed to upload photos of your throw-away dibs items!",
+          "microphonePermission": "Allow Dibs to access your microphone, this is needed to record audio for your dibs items!",
           "recordAudioAndroid": true
         }
       ],
       [
         "react-native-vision-camera",
         {
-          "cameraPermissionText": "Dibs needs access to your Camera."
+          "cameraPermissionText": "Allow Dibs to access your camera. This is needed to upload photos of your throw-away dibs items!"
         }
       ]
     ],
